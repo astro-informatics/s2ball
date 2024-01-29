@@ -1,0 +1,8 @@
+# Packages required for core functionality 
+numpy>=1.20
+colorlog
+pyyaml
+jaxlib==0.3.10
+jax==0.3.13
+
+pyssht

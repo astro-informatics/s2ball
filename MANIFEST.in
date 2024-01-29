@@ -1,0 +1,17 @@
+graft baller
+graft tests
+graft requirements
+
+include .pip_readme.rst
+include README.rst
+include pytest.ini
+include LICENCE.txt
+include LICENCE_EXT.txt
+include baller/default-logging-config.yaml
+
+exclude .coveragerc
+exclude *.log
+recursive-exclude docs/_build *
+recursive-exclude notebooks *
+
+global-exclude *.py[cod] __pycache__ *.so *.dylib .ipynb_checkpoints/** *~
