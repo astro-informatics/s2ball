@@ -13,9 +13,9 @@
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
 
-
-|logo| Optimal JAX wavelet transforms on the ball
-=================================================
+===================================================================
+|logo| Differentiable and accelerated wavelet transform on the ball
+===================================================================
 
 .. |logo| raw:: html
 
