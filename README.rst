@@ -24,8 +24,8 @@
 `S2BALL` is a JAX package which provides support for automatically 
 differentiable and greatly accelerated generalized Fourier transforms on the sphere, 
 rotation group, and ball. Furthermore, we support extremely efficient and differentiable 
-Wigner-Laguerre wavelets, *i.e.* the directional ball, which can be up to 50,000 times faster 
-than their ``C`` counterparts which are discussed in related works by `Leistedt & McEwen 2012 
+Wigner-Laguerre wavelets which can be up to 50,000 times faster 
+than their ``C`` counterparts, discussed in related works by `Leistedt & McEwen 2012 
 <https://arxiv.org/pdf/1205.0792.pdf>`_ and `Price & McEwen 2021 <https://arxiv.org/pdf/2105.05518.pdf>`_.
 
 Note that the underlying generalized Fourier transforms are, barring implementation optimizations, 
@@ -143,7 +143,7 @@ License
 
 .. code-block::
 
-     s2ball
+     S2BALL
      Copyright (C) 2024 Matthew Price, Jason McEwen & Contributors 
 
      This program is released under the MIT license (see LICENSE.txt).
