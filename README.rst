@@ -1,11 +1,11 @@
-.. image:: https://img.shields.io/badge/GitHub-s2ball-blue.svg?style=flat
-    :target: https://github.com/astro-informatics/s2ball
 .. image:: https://github.com/astro-informatics/s2ball/actions/workflows/tests.yml/badge.svg?branch=main
     :target: https://github.com/astro-informatics/s2ball/actions/workflows/tests.yml
 .. image:: https://codecov.io/gh/astro-informatics/s2ball/branch/main/graph/badge.svg?token=JNYV78Q8NJ 
     :target: https://codecov.io/gh/astro-informatics/s2ball
 .. image:: https://img.shields.io/badge/License-MIT-yellow.svg
     :target: https://opensource.org/licenses/MIT
+.. image:: https://badge.fury.io/py/s2ball.svg
+    :target: https://badge.fury.io/py/s2ball
 .. image:: http://img.shields.io/badge/arXiv-1205.0792-orange.svg?style=flat
     :target: https://arxiv.org/abs/1205.0792
 .. image:: http://img.shields.io/badge/arXiv-2105.05518-orange.svg?style=flat
