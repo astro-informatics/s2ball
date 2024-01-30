@@ -19,7 +19,7 @@
 
 .. |logo| raw:: html
 
-   <img src="./assets/sax_logo.png" align="left" height="70" width="70">
+   <img src=".docs/assets/sax_logo.png" align="left" height="70" width="70">
 
 `S2BALL` is a JAX package which provides support for automatically 
 differentiable and greatly accelerated generalized Fourier transforms on the sphere, 
@@ -99,29 +99,43 @@ processor, whereas all JAX operations were executed on a single NVIDIA A100 grap
 processing unit. The Jupyter notebooks for each benchmark can be found `here 
 <https://github.com/astro-informatics/s2ball/tree/main/notebooks>`_.
 
-    **NOTE:**
-    Benchmarking is restricted to scalar (spin 0 ) fields, though spin is supported 
-    throughout `S2BALL`. Further note that for Wigner tests we set N=5, and in our 
-    Laguerre and wavelet benchmarking we set N=1, as FLAG/FLAGLET otherwise take 
-    excessive compute. Finally, `S2BALL` transforms trivially support batching and 
-    so can, in many cases, gain several more orders of magnitude acceleration.
+Note that benchmarking is restricted to scalar (spin 0 ) fields, though spin is supported 
+throughout `S2BALL`. Further note that for Wigner tests we set N=5, and in our 
+Laguerre and wavelet benchmarking we set N=1, as FLAG/FLAGLET otherwise take 
+excessive compute. Finally, `S2BALL` transforms trivially support batching and 
+so can, in many cases, gain several more orders of magnitude acceleration.
     
 |harmonic| |wigner| 
 
 |laguerre| |wavelet|
 
-.. |harmonic| image:: ./assets/harmonic.png
+.. |harmonic| image:: .docs/assets/harmonic.png
     :width: 48%
 
-.. |wigner| image:: ./assets/wigner.png
+.. |wigner| image:: .docs/assets/wigner.png
     :width: 48%
 
-.. |laguerre| image:: ./assets/laguerre.png
+.. |laguerre| image:: .docs/assets/laguerre.png
     :width: 48%
 
-.. |wavelet| image:: ./assets/wavelet.png
+.. |wavelet| image:: .docs/assets/wavelet.png
     :width: 48%
 
+Attribution
+===========
+Should this code be used in any way, we kindly request that the following article is
+referenced. A BibTeX entry for this reference may look like:
+
+.. code-block:: 
+
+    @article{price:s2ball, 
+        author      = "Matthew A. Price and Alicja Polanska and Jessica Whitney and Jason D. McEwen",
+        title       = "Differentiable and accelerated directional wavelet transform on the sphere and ball",
+        journal     = "The Open Journal of Astrophysics, submitted",
+        year        = "2024",
+        eprint      = "arXiv:0000.0000"        
+    }
+    
 License
 =======
 
