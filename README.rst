@@ -32,8 +32,7 @@ Note that the underlying generalized Fourier transforms are, barring implementat
 optimally fast but come with a substantial memory overhead. As such, the authors **do not** 
 recommend `S2BALL` be used above a harmonic bandlimit of L ~ 256 with current GPU memory 
 limitations. We are developing state-of-the-art JAX recursion based harmonic transforms 
-in parallel work, to which we direct the user with higher resolution applications in mind.
-
+in parallel work, to which we direct the user with higher resolution applications in mind. 
 That being said, many applications are more than comfortable at lower resolutions, for 
 which these JAX transforms are ideally suited, *e.g.* geophysical modelling, diffusion 
 tensor imaging. For those with machine learning in mind, it should be explicitly noted 
