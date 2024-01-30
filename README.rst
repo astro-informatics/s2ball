@@ -19,7 +19,7 @@
 
 .. |logo| raw:: html
 
-   <img src=".docs/assets/sax_logo.png" align="left" height="70" width="70">
+   <img src="./docs/assets/sax_logo.png" align="left" height="70" width="70">
 
 `S2BALL` is a JAX package which provides support for automatically 
 differentiable and greatly accelerated generalized Fourier transforms on the sphere, 
