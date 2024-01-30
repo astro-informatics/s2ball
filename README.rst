@@ -1,6 +1,6 @@
 .. image:: https://github.com/astro-informatics/s2ball/actions/workflows/tests.yml/badge.svg?branch=main
     :target: https://github.com/astro-informatics/s2ball/actions/workflows/tests.yml
-.. image:: https://codecov.io/gh/astro-informatics/s2ball/branch/main/graph/badge.svg?token=JNYV78Q8NJ 
+.. image:: https://codecov.io/gh/astro-informatics/s2ball/graph/badge.svg?token=12JWTZPO96
     :target: https://codecov.io/gh/astro-informatics/s2ball
 .. image:: https://img.shields.io/badge/License-MIT-yellow.svg
     :target: https://opensource.org/licenses/MIT
@@ -28,15 +28,12 @@ Wigner-Laguerre wavelets which can be up to 50,000 times faster
 than their ``C`` counterparts, discussed in related works by `Leistedt & McEwen 2012 
 <https://arxiv.org/pdf/1205.0792.pdf>`_ and `Price & McEwen 2021 <https://arxiv.org/pdf/2105.05518.pdf>`_.
 
-Note that the underlying generalized Fourier transforms are, barring implementation optimizations, 
-optimally fast but come with a substantial memory overhead. As such, the authors **do not** 
-recommend `S2BALL` be used above a harmonic bandlimit of L ~ 256 with current GPU memory 
-limitations. We are developing state-of-the-art JAX recursion based harmonic transforms 
-in parallel work, to which we direct the user with higher resolution applications in mind. 
-That being said, many applications are more than comfortable at lower resolutions, for 
+The transforms `S2BALL` provides are optimally fast but come with a substantial memory 
+overhead and cannot be used above a harmonic bandlimit of L ~ 256, at least with current GPU memory 
+limitations. That being said, many applications are more than comfortable at these resolutions, for 
 which these JAX transforms are ideally suited, *e.g.* geophysical modelling, diffusion 
-tensor imaging. For those with machine learning in mind, it should be explicitly noted 
-that these transforms are indeed equivariant to their respective groups.
+tensor imaging, multiscale molecular modelling. For those with machine learning in mind, 
+it should be explicitly noted that these transforms are indeed equivariant to their respective groups.
 
 Basic Usage
 ===========

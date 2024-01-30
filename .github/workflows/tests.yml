@@ -35,4 +35,4 @@ jobs:
     - name: Run tests
       run: |
         pytest --cov-report term --cov=s2ball --cov-config=.coveragerc 
-        codecov --token add_token_here!
+        codecov --token f23a38a4-1d0f-4354-b8a3-b0e275a424b1

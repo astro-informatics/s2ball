@@ -1,27 +1,35 @@
-.. image:: https://img.shields.io/badge/GitHub-s2ball-blue.svg?style=flat
-    :target: https://github.com/astro-informatics/s2ball
 .. image:: https://github.com/astro-informatics/s2ball/actions/workflows/tests.yml/badge.svg?branch=main
     :target: https://github.com/astro-informatics/s2ball/actions/workflows/tests.yml
-.. image:: https://codecov.io/gh/astro-informatics/s2ball/branch/main/graph/badge.svg?token=JNYV78Q8NJ 
+.. image:: https://codecov.io/gh/astro-informatics/s2ball/graph/badge.svg?token=12JWTZPO96
     :target: https://codecov.io/gh/astro-informatics/s2ball
 .. image:: https://img.shields.io/badge/License-MIT-yellow.svg
     :target: https://opensource.org/licenses/MIT
+.. image:: https://badge.fury.io/py/s2ball.svg
+    :target: https://badge.fury.io/py/s2ball
 .. image:: http://img.shields.io/badge/arXiv-1205.0792-orange.svg?style=flat
     :target: https://arxiv.org/abs/1205.0792
 .. image:: http://img.shields.io/badge/arXiv-2105.05518-orange.svg?style=flat
     :target: https://arxiv.org/abs/2105.05518
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
+    
+===================================================================
+Differentiable and accelerated wavelet transform on the ball
+===================================================================
 
-Optimal JAX wavelet transforms on the ball
-=================================================
-
-`S2BALL` is a barebones JAX package which provides support for automatically 
+`S2BALL` is a JAX package which provides support for automatically 
 differentiable and greatly accelerated generalized Fourier transforms on the sphere, 
 rotation group, and ball. Furthermore, we support extremely efficient and differentiable 
-Wigner-Laguerre wavelets, *i.e.* the directional ball, which can be up to 50,000 times faster 
-than their ``C`` counterparts which are discussed in related works by `Leistedt & McEwen 2012 
+Wigner-Laguerre wavelets which can be up to 50,000 times faster 
+than their ``C`` counterparts, discussed in related works by `Leistedt & McEwen 2012 
 <https://arxiv.org/pdf/1205.0792.pdf>`_ and `Price & McEwen 2021 <https://arxiv.org/pdf/2105.05518.pdf>`_.
+
+The transforms `S2BALL` provides are optimally fast but come with a substantial memory 
+overhead and cannot be used above a harmonic bandlimit of L ~ 256, at least with current GPU memory 
+limitations. That being said, many applications are more than comfortable at these resolutions, for 
+which these JAX transforms are ideally suited, *e.g.* geophysical modelling, diffusion 
+tensor imaging, multiscale molecular modelling. For those with machine learning in mind, 
+it should be explicitly noted that these transforms are indeed equivariant to their respective groups.
 
 Documentation
 =============
