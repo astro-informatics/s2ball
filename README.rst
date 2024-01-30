@@ -1,9 +1,9 @@
-.. image:: https://img.shields.io/badge/GitHub-baller-blue.svg?style=flat
-    :target: https://github.com/CosmoMatt/baller
-.. image:: https://github.com/CosmoMatt/baller/actions/workflows/tests.yml/badge.svg?branch=main
-    :target: https://github.com/CosmoMatt/baller/actions/workflows/tests.yml
-.. image:: https://codecov.io/gh/CosmoMatt/baller/branch/main/graph/badge.svg?token=JNYV78Q8NJ 
-    :target: https://codecov.io/gh/CosmoMatt/baller
+.. image:: https://img.shields.io/badge/GitHub-s2ball-blue.svg?style=flat
+    :target: https://github.com/astro-informatics/s2ball
+.. image:: https://github.com/astro-informatics/s2ball/actions/workflows/tests.yml/badge.svg?branch=main
+    :target: https://github.com/astro-informatics/s2ball/actions/workflows/tests.yml
+.. image:: https://codecov.io/gh/astro-informatics/s2ball/branch/main/graph/badge.svg?token=JNYV78Q8NJ 
+    :target: https://codecov.io/gh/astro-informatics/s2ball
 .. image:: https://img.shields.io/badge/License-MIT-yellow.svg
     :target: https://opensource.org/licenses/MIT
 .. image:: http://img.shields.io/badge/arXiv-1205.0792-orange.svg?style=flat
@@ -14,26 +14,25 @@
     :target: https://github.com/psf/black
 
 
-|logo| BALLER: Lightning fast but memory inefficient JAX transforms on the sphere, ball, and rotation group.
-======================================================================================================================================
+|logo| Optimal JAX wavelet transforms on the ball
+=================================================
 
 .. |logo| raw:: html
 
    <img src="./assets/sax_logo.png" align="left" height="70" width="70">
 
-This is a barebones JAX package which provides support for automatically 
+`S2BALL` is a JAX package which provides support for automatically 
 differentiable and greatly accelerated generalized Fourier transforms on the sphere, 
 rotation group, and ball. Furthermore, we support extremely efficient and differentiable 
 Wigner-Laguerre wavelets, *i.e.* the directional ball, which can be up to 50,000 times faster 
 than their ``C`` counterparts which are discussed in related works by `Leistedt & McEwen 2012 
 <https://arxiv.org/pdf/1205.0792.pdf>`_ and `Price & McEwen 2021 <https://arxiv.org/pdf/2105.05518.pdf>`_.
 
-    **NOTE:**
-    The underlying generalized Fourier transforms are, barring implementation optimizations, 
-    optimally fast but come with a substantial memory overhead. As such, the authors **do not** 
-    recommend ``baller`` be used above a harmonic bandlimit of L ~ 256 with current GPU memory 
-    limitations. We are developing state-of-the-art JAX recursion based harmonic transforms 
-    in parallel work, to which we direct the user with higher resolution applications in mind.
+Note that the underlying generalized Fourier transforms are, barring implementation optimizations, 
+optimally fast but come with a substantial memory overhead. As such, the authors **do not** 
+recommend `S2BALL` be used above a harmonic bandlimit of L ~ 256 with current GPU memory 
+limitations. We are developing state-of-the-art JAX recursion based harmonic transforms 
+in parallel work, to which we direct the user with higher resolution applications in mind.
 
 That being said, many applications are more than comfortable at lower resolutions, for 
 which these JAX transforms are ideally suited, *e.g.* geophysical modelling, diffusion 
@@ -42,13 +41,13 @@ that these transforms are indeed equivariant to their respective groups.
 
 Basic Usage
 ===========
-To apply the generalised Fourier transforms supported by ``baller`` one need only 
+To apply the generalised Fourier transforms supported by `S2BALL` one need only 
 import the package and apply the respective transform, which is as simple as doing the 
 following: 
 
 .. code-block:: Python
 
-    from baller.transform import *
+    from s2ball.transform import *
     import numpy as np 
 
     # Load some data
@@ -88,23 +87,23 @@ following:
 However, for repeated application of these transforms it is optimal to instead precompile 
 various kernels which can be placed on device to minimise i/o during *e.g.* training. This 
 operational mode can be seen throughout our examples, found `here 
-<https://github.com/CosmoMatt/baller/tree/main/notebooks>`_.
+<https://github.com/astro-informatics/s2ball/tree/main/notebooks>`_.
 
 Computational Benchmarking
 ==========================
-The various generalized Fourier and wavelet transforms supported by ``baller`` were 
+The various generalized Fourier and wavelet transforms supported by `S2BALL` were 
 benchmarked against their ``C`` counterparts over a variety of parameter configurations. 
 Each benchmark has been averaged over many runs, though here we provide only the mean. 
 All CPU based operations were executed on a single core from a AMD EPYC 7702 64-core 
 processor, whereas all JAX operations were executed on a single NVIDIA A100 graphics 
 processing unit. The Jupyter notebooks for each benchmark can be found `here 
-<https://github.com/CosmoMatt/baller/tree/main/notebooks>`_.
+<https://github.com/astro-informatics/s2ball/tree/main/notebooks>`_.
 
     **NOTE:**
     Benchmarking is restricted to scalar (spin 0 ) fields, though spin is supported 
-    throughout ``baller``. Further note that for Wigner tests we set N=5, and in our 
+    throughout `S2BALL`. Further note that for Wigner tests we set N=5, and in our 
     Laguerre and wavelet benchmarking we set N=1, as FLAG/FLAGLET otherwise take 
-    excessive compute. Finally, ``baller`` transforms trivially support batching and 
+    excessive compute. Finally, `S2BALL` transforms trivially support batching and 
     so can, in many cases, gain several more orders of magnitude acceleration.
     
 |harmonic| |wigner| 
@@ -126,11 +125,11 @@ processing unit. The Jupyter notebooks for each benchmark can be found `here
 License
 =======
 
-``baller`` is released under the MIT license (see `LICENSE.txt <https://github.com/CosmoMatt/baller/blob/main/LICENCE.txt>`_).
+`S2BALL` is released under the MIT license (see `LICENSE.txt <https://github.com/astro-informatics/s2ball/blob/main/LICENCE.txt>`_).
 
 .. code-block::
 
-     baller
-     Copyright (C) 2022 Matthew Price, Jason McEwen & Constributors 
+     s2ball
+     Copyright (C) 2024 Matthew Price, Jason McEwen & Contributors 
 
      This program is released under the MIT license (see LICENSE.txt).

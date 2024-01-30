@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from baller.transform import laguerre, ball_wavelet, ball_wavelet_adjoint
-from baller.wavelets.helper_functions import *
+from s2ball.transform import laguerre, ball_wavelet, ball_wavelet_adjoint
+from s2ball.wavelets.helper_functions import *
 
 L_to_test = [6, 8]
 P_to_test = [6, 8]
@@ -28,12 +28,8 @@ def test_roundtrip_wavelet(
 
     f = laguerre.inverse(flmp, L, P, tau, method=method)
 
-    f_wav, f_scal = ball_wavelet.forward(
-        f, L, N, P, lam, lam, tau, method=method
-    )
-    f = ball_wavelet.inverse(
-        f_wav, f_scal, L, N, P, lam, lam, tau, method=method
-    )
+    f_wav, f_scal = ball_wavelet.forward(f, L, N, P, lam, lam, tau, method=method)
+    f = ball_wavelet.inverse(f_wav, f_scal, L, N, P, lam, lam, tau, method=method)
 
     f_wav_check, f_scal_check = ball_wavelet.forward(
         f, L, N, P, lam, lam, tau, method=method
@@ -47,9 +43,7 @@ def test_roundtrip_wavelet(
 
     for jp in range(Jp + 1):
         for jl in range(Jl + 1):
-            np.testing.assert_allclose(
-                f_wav[jp][jl], f_wav_check[jp][jl], atol=1e-14
-            )
+            np.testing.assert_allclose(f_wav[jp][jl], f_wav_check[jp][jl], atol=1e-14)
 
 
 @pytest.mark.parametrize("L", L_to_test)
@@ -66,9 +60,7 @@ def test_forward_adjoint_wavelet(
 
     flmp = flmp_generator(L, P)
     f = laguerre.inverse(flmp, L, P, tau, method=method)
-    f_wav, f_scal = ball_wavelet.forward(
-        f, L, N, P, lam, lam, tau, method=method
-    )
+    f_wav, f_scal = ball_wavelet.forward(f, L, N, P, lam, lam, tau, method=method)
     f_adjoint = ball_wavelet_adjoint.forward(
         f_wav, f_scal, L, N, P, lam, lam, tau, method=method
     )
@@ -97,9 +89,7 @@ def test_inverse_adjoint_wavelet(
 
     flmp = flmp_generator(L, P)
     f = laguerre.inverse(flmp, L, P, tau, method=method)
-    f_wav, f_scal = ball_wavelet.forward(
-        f, L, N, P, lam, lam, tau, method=method
-    )
+    f_wav, f_scal = ball_wavelet.forward(f, L, N, P, lam, lam, tau, method=method)
 
     f_inverse = ball_wavelet.inverse(
         f_wav, f_scal, L, N, P, lam, lam, tau, method=method

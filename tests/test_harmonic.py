@@ -3,9 +3,9 @@ import numpy as np
 import pyssht as ssht
 import pytest
 
-from baller.transform import harmonic
-from baller.construct.legendre_constructor import *
-from baller import utils
+from s2ball.transform import harmonic
+from s2ball.construct.legendre_constructor import *
+from s2ball import utils
 
 from jax import jit, device_put
 from jax.config import config
@@ -35,9 +35,7 @@ def test_forward_legendre_matrix_constructor(L: int, spin: int):
 def test_inverse_legendre_matrix_constructor(L: int, spin: int):
     """Test creation and saving down of inverse Legendre kernels"""
     save_dir = ".matrices"
-    filename = save_dir + "/legendre_inverse_matrix_{}_spin_{}.npy".format(
-        L, spin
-    )
+    filename = save_dir + "/legendre_inverse_matrix_{}_spin_{}.npy".format(L, spin)
 
     legendre_inverse = construct_legendre_matrix_inverse(L, save_dir, spin)
     assert legendre_inverse.shape == (L, 2 * L - 1, L)
@@ -95,9 +93,7 @@ def test_transform_precompute_load_legendre(
 
     f = ssht.inverse(utils.flm_2d_to_1d(flm, L), L, spin)
 
-    flm_precomp = harmonic.forward(
-        f, L=L, method=method, spin=spin, save_dir=save_dir
-    )
+    flm_precomp = harmonic.forward(f, L=L, method=method, spin=spin, save_dir=save_dir)
     assert np.allclose(flm_precomp, flm)
 
     f_precomp = harmonic.inverse(
@@ -153,9 +149,7 @@ def test_transform_precompute_jax(flm_generator, L: int, spin: int):
 @pytest.mark.parametrize("L", L_to_test)
 @pytest.mark.parametrize("spin", spin_to_test)
 @pytest.mark.parametrize("method", methods_to_test)
-def test_forward_adjoint_transform(
-    flm_generator, L: int, spin: int, method: str
-):
+def test_forward_adjoint_transform(flm_generator, L: int, spin: int, method: str):
     """Test wrapper implementation of forward adjoint sht"""
     flm = flm_generator(L=L, spin=spin)
     f = ssht.inverse(utils.flm_2d_to_1d(flm, L), L, spin)
@@ -171,16 +165,12 @@ def test_forward_adjoint_transform(
 @pytest.mark.parametrize("L", L_to_test)
 @pytest.mark.parametrize("spin", spin_to_test)
 @pytest.mark.parametrize("method", methods_to_test)
-def test_inverse_adjoint_transform(
-    flm_generator, L: int, spin: int, method: str
-):
+def test_inverse_adjoint_transform(flm_generator, L: int, spin: int, method: str):
     """Test wrapper implementation of inverse adjoint sht"""
     flm = flm_generator(L=L, spin=spin)
     f = ssht.inverse(utils.flm_2d_to_1d(flm, L), L, spin)
 
-    flm_inverse_adjoint = harmonic.inverse(
-        f, L, None, method, spin, adjoint=True
-    )
+    flm_inverse_adjoint = harmonic.inverse(f, L, None, method, spin, adjoint=True)
     f_inverse = harmonic.inverse(flm, L, None, method, spin)
 
     a = np.abs(np.vdot(f, f_inverse))

@@ -1,4 +1,4 @@
-graft baller
+graft s2ball
 graft tests
 graft requirements
 
@@ -7,7 +7,6 @@ include README.rst
 include pytest.ini
 include LICENCE.txt
 include LICENCE_EXT.txt
-include baller/default-logging-config.yaml
 
 exclude .coveragerc
 exclude *.log

@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
 
-from baller.transform import wigner_laguerre as laguerre
-from baller.construct.wigner_constructor import *
-from baller.sampling import laguerre_sampling
+from s2ball.transform import wigner_laguerre as laguerre
+from s2ball.construct.wigner_constructor import *
+from s2ball.sampling import laguerre_sampling
 
 L_to_test = [8, 12, 16]
 N_to_test = [2, 4, 6]
@@ -28,16 +28,10 @@ def test_roundtrip_wigner_laguerre(
 
     flmnp = flmnp_generator(L, N, P)
 
-    f = laguerre.inverse(
-        flmnp, L, N, P, tau, wigner_inverse, lag_poly_i, method
-    )
-    flmnp = laguerre.forward(
-        f, L, N, P, tau, wigner_forward, lag_poly_f, method
-    )
+    f = laguerre.inverse(flmnp, L, N, P, tau, wigner_inverse, lag_poly_i, method)
+    flmnp = laguerre.forward(f, L, N, P, tau, wigner_forward, lag_poly_f, method)
 
-    f_check = laguerre.inverse(
-        flmnp, L, N, P, tau, wigner_inverse, lag_poly_i, method
-    )
+    f_check = laguerre.inverse(flmnp, L, N, P, tau, wigner_inverse, lag_poly_i, method)
     flmnp_check = laguerre.forward(
         f_check, L, N, P, tau, wigner_forward, lag_poly_f, method
     )
@@ -78,9 +72,7 @@ def test_forward_wigner_laguerre_adjoint(
     f = laguerre.inverse(flmnp, L, N, P, tau, method=method)
 
     flmnp_forward = laguerre.forward(f, L, N, P, tau, method=method)
-    f_adjoint = laguerre.forward(
-        flmnp, L, N, P, tau, method=method, adjoint=True
-    )
+    f_adjoint = laguerre.forward(flmnp, L, N, P, tau, method=method, adjoint=True)
 
     a = np.abs(np.vdot(f, f_adjoint))
     b = np.abs(np.vdot(flmnp, flmnp_forward))
