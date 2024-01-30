@@ -2,7 +2,8 @@
 numpy>=1.20
 colorlog
 pyyaml
-jaxlib==0.3.10
-jax==0.3.13
+jax>=0.3.13
+jaxlib
+
 
 pyssht

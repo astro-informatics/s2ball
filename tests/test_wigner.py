@@ -3,9 +3,9 @@ import numpy as np
 import so3
 import pytest
 
-from baller.transform import wigner
-from baller.construct.wigner_constructor import *
-from baller import utils
+from s2ball.transform import wigner
+from s2ball.construct.wigner_constructor import *
+from s2ball import utils
 
 L_to_test = [8, 16, 32]
 N_to_test = [2, 4, 6]
@@ -51,9 +51,7 @@ def test_legendre_matrix_constructor_compute_time_warning():
 def test_wigner_forward(flmn_generator, L: int, N: int, method: str):
     """Test wrapper implementation of forward wigner transform"""
     save_dir = ".matrices"
-    params = so3.create_parameter_dict(
-        L=L, N=N, sampling_scheme_str="SO3_SAMPLING_MW"
-    )
+    params = so3.create_parameter_dict(L=L, N=N, sampling_scheme_str="SO3_SAMPLING_MW")
 
     wig_for = construct_wigner_matrix(L, N, save_dir)
 
@@ -75,9 +73,7 @@ def test_wigner_forward(flmn_generator, L: int, N: int, method: str):
 def test_wigner_inverse(flmn_generator, L: int, N: int, method: str):
     """Test wrapper implementation of inverse wigner transform"""
     save_dir = ".matrices"
-    params = so3.create_parameter_dict(
-        L=L, N=N, sampling_scheme_str="SO3_SAMPLING_MW"
-    )
+    params = so3.create_parameter_dict(L=L, N=N, sampling_scheme_str="SO3_SAMPLING_MW")
     wig_inv = construct_wigner_matrix_inverse(L, N, save_dir)
 
     flmn_3d = flmn_generator(L=L, N=N)

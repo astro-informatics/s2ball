@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
-from baller.wavelets import tiling
-from baller.wavelets.helper_functions import *
+from s2ball.wavelets import tiling
+from s2ball.wavelets.helper_functions import *
 
 L_to_test = [8, 12, 16]
 P_to_test = [8, 12, 16]
@@ -27,9 +27,7 @@ def test_laguerre_wavelet_admissibility(L: int, P: int, N: int, lam: float):
     Jp = j_max(P, lam)
 
     wav_lmp, scal_lmp = tiling.compute_wav_lmp(L, N, P, lam, lam)
-    ident = (scal_lmp * np.conj(scal_lmp)) * (
-        4.0 * np.pi / (2 * np.arange(L) + 1)
-    )
+    ident = (scal_lmp * np.conj(scal_lmp)) * (4.0 * np.pi / (2 * np.arange(L) + 1))
 
     factor = 8.0 * np.pi**2 / (2 * np.arange(L) + 1)
     for jp in range(Jp + 1):

@@ -34,28 +34,28 @@ def rng(seed):
 
 @pytest.fixture
 def flm_generator(rng):
-    from baller import utils
+    from s2ball import utils
 
     return partial(utils.generate_flm, rng)
 
 
 @pytest.fixture
 def flmn_generator(rng):
-    from baller import utils
+    from s2ball import utils
 
     return partial(utils.generate_flmn, rng)
 
 
 @pytest.fixture
 def flmp_generator(rng):
-    from baller import utils
+    from s2ball import utils
 
     return partial(utils.generate_flmp, rng)
 
 
 @pytest.fixture
 def flmnp_generator(rng):
-    from baller import utils
+    from s2ball import utils
 
     return partial(utils.generate_flmnp, rng)
 

@@ -1,8 +1,7 @@
 # Testing
 pytest 
 pytest-cov
+codecov
 
-# Healpix Sampling
+# Regression
 so3
-# pyflag
-# pyflaglet 

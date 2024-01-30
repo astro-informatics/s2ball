@@ -1,0 +1,38 @@
+name: Tests
+
+on:  
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.10]
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v2.3.1
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements/requirements-tests.txt
+        pip install -r requirements/requirements-core.txt
+        pip install .
+    
+    - name: Run tests
+      run: |
+        pytest --cov-report term --cov=s2ball --cov-config=.coveragerc 
+        codecov --token add_token_here!
