@@ -19,7 +19,7 @@
 
 .. |logo| raw:: html
 
-   <img src="./docs/assets/sax_logo.png" align="left" height="90" width="90">
+   <img src="./docs/assets/sax_logo.png" align="left" height="100" width="100">
 
 `S2BALL` is a JAX package which provides support for automatically 
 differentiable and greatly accelerated generalized Fourier transforms on the sphere, 
@@ -109,16 +109,16 @@ so can, in many cases, gain several more orders of magnitude acceleration.
 
 |laguerre| |wavelet|
 
-.. |harmonic| image:: ./docs/assets/harmonic.png
+.. |harmonic| image:: ./docs/assets/figures/harmonic.png
     :width: 48%
 
-.. |wigner| image:: ./docs/assets/wigner.png
+.. |wigner| image:: ./docs/assets/figures/wigner.png
     :width: 48%
 
-.. |laguerre| image:: ./docs/assets/laguerre.png
+.. |laguerre| image:: ./docs/assets/figures/laguerre.png
     :width: 48%
 
-.. |wavelet| image:: ./docs/assets/wavelet.png
+.. |wavelet| image:: ./docs/assets/figures/wavelet.png
     :width: 48%
 
 Attribution
