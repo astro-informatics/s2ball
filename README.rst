@@ -35,7 +35,7 @@ which these JAX transforms are ideally suited, *e.g.* geophysical modelling, dif
 tensor imaging, multiscale molecular modelling. For those with machine learning in mind, 
 it should be explicitly noted that these transforms are indeed equivariant to their respective groups.
 
-Wavelet Filters on the Ball |:zap:|
+Wavelet Filters on the Ball :zap:
 ------------------------------------
 
 The filters `S2BALL` provides were originally derived by `Leistedt & McEwen 2012 
