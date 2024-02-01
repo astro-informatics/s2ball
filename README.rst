@@ -35,8 +35,9 @@ which these JAX transforms are ideally suited, *e.g.* geophysical modelling, dif
 tensor imaging, multiscale molecular modelling. For those with machine learning in mind, 
 it should be explicitly noted that these transforms are indeed equivariant to their respective groups.
 
-Wavelet Filters on the Ball
-============================
+Wavelet Filters on the Ball |:zap:|
+------------------------------------
+
 The filters `S2BALL` provides were originally derived by `Leistedt & McEwen 2012 
 <https://arxiv.org/pdf/1205.0792.pdf>`_ and are constructed by tesselating both harmonic space 
 and the radial half-line with infinitely differentiable Cauchy-Schwartz functions. This tesselation 
@@ -55,7 +56,7 @@ The above is the frequency space localisation of the wavelet filters, however on
     :width: 90%
 
 Installation
-==============
+---------------------------
 
 The Python dependencies for the `S2BALL` package are listed in the file
 `requirements/requirements-core.txt` and will be automatically installed
@@ -80,7 +81,8 @@ Alternatively, the `S2BALL` package may be installed directly from PyPi by runni
     pip install s2ball
 
 Basic Usage
-===========
+---------------------------
+
 To apply the generalised Fourier transforms supported by `S2BALL` one need only 
 import the package and apply the respective transform, which is as simple as doing the 
 following: 
@@ -130,7 +132,8 @@ operational mode can be seen throughout our examples, found `here
 <https://github.com/astro-informatics/s2ball/tree/main/notebooks>`_.
 
 Computational Benchmarking
-==========================
+---------------------------
+
 The various generalized Fourier and wavelet transforms supported by `S2BALL` were 
 benchmarked against their ``C`` counterparts over a variety of parameter configurations. 
 Each benchmark has been averaged over many runs, though here we provide only the mean. 
@@ -162,7 +165,8 @@ so can, in many cases, gain several more orders of magnitude acceleration.
     :width: 48%
 
 Attribution
-===========
+---------------------------
+
 Should this code be used in any way, we kindly request that the following article is
 referenced. A BibTeX entry for this reference may look like:
 
@@ -233,7 +237,7 @@ You might also like to consider citing our related papers on which this code bui
     }
 
 License
-=======
+---------------------------
 
 `S2BALL` is released under the MIT license (see `LICENSE.txt <https://github.com/astro-informatics/s2ball/blob/main/LICENCE.txt>`_).
 
