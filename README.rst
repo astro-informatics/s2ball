@@ -35,8 +35,8 @@ which these JAX transforms are ideally suited, *e.g.* geophysical modelling, dif
 tensor imaging, multiscale molecular modelling. For those with machine learning in mind, 
 it should be explicitly noted that these transforms are indeed equivariant to their respective groups.
 
-Wavelet Filters on the Ball :zap:
-------------------------------------
+Wavelet Filters on the Ball :ringed_planet:
+--------------------------------------------
 
 The filters `S2BALL` provides were originally derived by `Leistedt & McEwen 2012 
 <https://arxiv.org/pdf/1205.0792.pdf>`_ and are constructed by tesselating both harmonic space 
@@ -55,7 +55,7 @@ The above is the frequency space localisation of the wavelet filters, however on
 .. |filter_support_pixel| image:: ./docs/assets/figures/ball_filter_support_pixelspace.png
     :width: 90%
 
-Installation
+Installation :computer:
 ---------------------------
 
 The Python dependencies for the `S2BALL` package are listed in the file
@@ -80,7 +80,7 @@ Alternatively, the `S2BALL` package may be installed directly from PyPi by runni
 
     pip install s2ball
 
-Basic Usage
+Basic Usage :rocket:
 ---------------------------
 
 To apply the generalised Fourier transforms supported by `S2BALL` one need only 
@@ -131,8 +131,8 @@ various kernels which can be placed on device to minimise i/o during *e.g.* trai
 operational mode can be seen throughout our examples, found `here 
 <https://github.com/astro-informatics/s2ball/tree/main/notebooks>`_.
 
-Computational Benchmarking
----------------------------
+Computational Benchmarking :alarm_clock:
+----------------------------------------
 
 The various generalized Fourier and wavelet transforms supported by `S2BALL` were 
 benchmarked against their ``C`` counterparts over a variety of parameter configurations. 
@@ -164,7 +164,7 @@ so can, in many cases, gain several more orders of magnitude acceleration.
 .. |wavelet| image:: ./docs/assets/figures/wavelet.png
     :width: 48%
 
-Attribution
+Attribution  :pen:
 ---------------------------
 
 Should this code be used in any way, we kindly request that the following article is
