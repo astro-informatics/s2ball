@@ -255,8 +255,8 @@ You might also like to consider citing our related papers on which this code bui
         doi         = "10.1109/LSP.2015.2490676"    
     }
 
-License
----------------------------
+License :memo:
+---------------
 
 `S2BALL` is released under the MIT license (see `LICENSE.txt <https://github.com/astro-informatics/s2ball/blob/main/LICENCE.txt>`_).
 
