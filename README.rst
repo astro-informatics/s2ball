@@ -35,29 +35,17 @@ which these JAX transforms are ideally suited, *e.g.* geophysical modelling, dif
 tensor imaging, multiscale molecular modelling. For those with machine learning in mind, 
 it should be explicitly noted that these transforms are indeed equivariant to their respective groups.
 
-Wavelet Filters
-===============
+Wavelet Filters on the Ball
+============================
 The filters `S2BALL` provides were originally derived by `Leistedt & McEwen 2012 
 <https://arxiv.org/pdf/1205.0792.pdf>`_ and are constructed by tesselating both harmonic space 
 and the radial half-line with infinitely differentiable Cauchy-Schwartz functions. This tesselation 
 gives rise to the follow frequency space localisation 
 
-|filter_support_1_1| |filter_support_1_2| |filter_support_1_3| |filter_support_1_4| |filter_support_1_5|
+|filter_support|
 
-.. |filter_support_1_1| image:: ./docs/assets/figures/filter_support/angle_1_scale_1.png 
-    :width: 18%
-
-.. |filter_support_1_2| image:: ./docs/assets/figures/filter_support/angle_1_scale_2.png 
-    :width: 18%
-
-.. |filter_support_1_3| image:: ./docs/assets/figures/filter_support/angle_1_scale_3.png 
-    :width: 18%
-
-.. |filter_support_1_4| image:: ./docs/assets/figures/filter_support/angle_1_scale_4.png 
-    :width: 18%
-
-.. |filter_support_1_5| image:: ./docs/assets/figures/filter_support/angle_1_scale_5.png 
-    :width: 18%
+.. |filter_support| image:: ./docs/assets/figures/ball_filter_support.png
+    :width: 90%
 
 Basic Usage
 ===========
