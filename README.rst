@@ -6,10 +6,10 @@
     :target: https://opensource.org/licenses/MIT
 .. image:: https://badge.fury.io/py/s2ball.svg
     :target: https://badge.fury.io/py/s2ball
-.. image:: http://img.shields.io/badge/arXiv-1205.0792-orange.svg?style=flat
-    :target: https://arxiv.org/abs/1205.0792
-.. image:: http://img.shields.io/badge/arXiv-2105.05518-orange.svg?style=flat
-    :target: https://arxiv.org/abs/2105.05518
+.. image:: http://img.shields.io/badge/arXiv-0000.00000-orange.svg?style=flat
+    :target: https://arxiv.org/abs/0000.00000
+.. image:: https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square
+    :target: #contributors-
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
 
@@ -182,7 +182,7 @@ key <https://allcontributors.org/docs/en/emoji-key>`_):
         </tbody>
         </table>
     </embed>
-    
+
 Attribution :books:
 -------------------
 
