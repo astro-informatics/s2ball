@@ -47,6 +47,13 @@ gives rise to the follow frequency space localisation
 .. |filter_support| image:: ./docs/assets/figures/ball_filter_support.png
     :width: 90%
 
+The above is the frequency space localisation of the wavelet filters, however one can also view wavelet filters in pixel space. Visualising these filters is somewhat tricky as the surface of the ball is embedded in 4-dimensional space, however we can view a spherical slice of the ball for each radial node
+
+|filter_support_pixel|
+
+.. |filter_support_pixel| image:: ./docs/assets/figures/ball_filter_support_pixelspace.png
+    :width: 90%
+
 Basic Usage
 ===========
 To apply the generalised Fourier transforms supported by `S2BALL` one need only 
