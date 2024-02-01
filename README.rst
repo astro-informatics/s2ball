@@ -8,7 +8,7 @@
     :target: https://badge.fury.io/py/s2ball
 .. image:: http://img.shields.io/badge/arXiv-0000.00000-orange.svg?style=flat
     :target: https://arxiv.org/abs/0000.00000
-.. image:: https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square
+.. image:: https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square
     :target: #contributors-
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
