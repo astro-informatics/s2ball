@@ -131,8 +131,8 @@ various kernels which can be placed on device to minimise i/o during *e.g.* trai
 operational mode can be seen throughout our examples, found `here 
 <https://github.com/astro-informatics/s2ball/tree/main/notebooks>`_.
 
-Computational Benchmarking :alarm_clock:
-----------------------------------------
+Computational Benchmarking :hourglass_flowing_sand:
+--------------------------------------------------
 
 The various generalized Fourier and wavelet transforms supported by `S2BALL` were 
 benchmarked against their ``C`` counterparts over a variety of parameter configurations. 
@@ -164,8 +164,8 @@ so can, in many cases, gain several more orders of magnitude acceleration.
 .. |wavelet| image:: ./docs/assets/figures/wavelet.png
     :width: 48%
 
-Attribution  :pen:
----------------------------
+Attribution :books:
+-------------------
 
 Should this code be used in any way, we kindly request that the following article is
 referenced. A BibTeX entry for this reference may look like:
