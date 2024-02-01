@@ -47,12 +47,37 @@ gives rise to the follow frequency space localisation
 .. |filter_support| image:: ./docs/assets/figures/ball_filter_support.png
     :width: 90%
 
-The above is the frequency space localisation of the wavelet filters, however one can also view wavelet filters in pixel space. Visualising these filters is somewhat tricky as the surface of the ball is embedded in 4-dimensional space, however we can view a spherical slice of the ball for each radial node
+The above is the frequency space localisation of the wavelet filters, however one can also view wavelet filters in pixel space. Visualising these filters is somewhat tricky as the ball is a 3-dimensional surface embedded in 4-dimensional space. We can, however, straightforwardly view a spherical slice of the ball for each radial node
 
 |filter_support_pixel|
 
 .. |filter_support_pixel| image:: ./docs/assets/figures/ball_filter_support_pixelspace.png
     :width: 90%
+
+Installation
+==============
+
+The Python dependencies for the `S2BALL` package are listed in the file
+`requirements/requirements-core.txt` and will be automatically installed
+into the active python environment by [pip](https://pypi.org) when running
+
+.. code-block:: bash
+
+    pip install .        
+
+
+from the root directory of the repository. Unit tests can then be
+executed to ensure the installation was successful by running
+
+.. code-block:: bash
+
+    pytest tests/  
+
+Alternatively, the `S2BALL` package may be installed directly from PyPi by running 
+
+.. code-block:: bash
+
+    pip install s2ball
 
 Basic Usage
 ===========
@@ -150,7 +175,63 @@ referenced. A BibTeX entry for this reference may look like:
         year        = "2024",
         eprint      = "arXiv:0000.0000"        
     }
+
+This work is provided as part of a collection of `JAX` harmonic analysis packages which include 
+
+.. code-block:: 
+
+    @article{price:s2fft, 
+        author      = "Matthew A. Price and Jason D. McEwen",
+        title       = "Differentiable and accelerated spherical harmonic and Wigner transforms",
+        journal     = "Journal of Computational Physics, submitted",
+        year        = "2023",
+        eprint      = "arXiv:2311.14670"        
+    }
     
+You might also like to consider citing our related papers on which this code builds:
+
+.. code-block:: 
+
+    @article{leistedt:flaglets,
+        author      = "Boris Leistedt and Jason D. McEwen",
+        title       = "Exact wavelets on the ball",
+        journal     = "IEEE Trans. Sig. Proc.",
+        year        = "2012",
+        volume      = "60",
+        number      = "12",
+        pages       = "6257--6269",        
+        eprint      = "arXiv:1205.0792",
+        doi         = "110.1109/TSP.2012.2215030"
+    }
+
+.. code-block:: 
+
+    @article{mcewen:fssht,
+        author      = "Jason D. McEwen and Yves Wiaux",
+        title       = "A novel sampling theorem on the sphere",
+        journal     = "IEEE Trans. Sig. Proc.",
+        year        = "2011",
+        volume      = "59",
+        number      = "12",
+        pages       = "5876--5887",        
+        eprint      = "arXiv:1110.6298",
+        doi         = "10.1109/TSP.2011.2166394"
+    }
+
+.. code-block:: 
+
+    @article{mcewen:so3,
+        author      = "Jason D. McEwen and Martin B{\"u}ttner and Boris ~Leistedt and Hiranya V. Peiris and Yves Wiaux",
+        title       = "A novel sampling theorem on the rotation group",
+        journal     = "IEEE Sig. Proc. Let.",
+        year        = "2015",
+        volume      = "22",
+        number      = "12",
+        pages       = "2425--2429",
+        eprint      = "arXiv:1508.03101",
+        doi         = "10.1109/LSP.2015.2490676"    
+    }
+
 License
 =======
 
@@ -158,7 +239,8 @@ License
 
 .. code-block::
 
-     S2BALL
-     Copyright (C) 2024 Matthew Price, Jason McEwen & Contributors 
+    We provide this code under an MIT open-source licence with the hope that it will be of use to a wider community.
 
-     This program is released under the MIT license (see LICENSE.txt).
+    Copyright 2024 Matthew Price, Jason McEwen and contributors.
+
+    `S2BALL` is free software made available under the MIT License. For details see the LICENSE file.
