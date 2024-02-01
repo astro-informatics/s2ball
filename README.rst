@@ -164,6 +164,25 @@ so can, in many cases, gain several more orders of magnitude acceleration.
 .. |wavelet| image:: ./docs/assets/figures/wavelet.png
     :width: 48%
 
+Contributors ✨
+-----------------------------------
+
+Thanks goes to these wonderful people (`emoji
+key <https://allcontributors.org/docs/en/emoji-key>`_):
+
+.. raw:: html 
+
+    <embed>
+        <table>
+        <tbody>
+            <tr>
+            <td align="center" valign="top" width="16.66%"><a href="https://cosmomatt.github.io"><img src="https://avatars.githubusercontent.com/u/32554533?v=4?s=100" width="100px;" alt="Matt Price"/><br /><sub><b>Matt Price</b></sub></a><br /><a href="https://github.com/astro-informatics/S2BALL/commits?author=CosmoMatt" title="Code">💻</a> <a href="https://github.com/astro-informatics/S2BALL/pulls?q=is%3Apr+reviewed-by%3ACosmoMatt" title="Reviewed Pull Requests">👀</a> <a href="#ideas-CosmoMatt" title="Ideas, Planning, & Feedback">🤔</a></td>
+            <td align="center" valign="top" width="16.66%"><a href="http://www.jasonmcewen.org"><img src="https://avatars.githubusercontent.com/u/3181701?v=4?s=100" width="100px;" alt="Jason McEwen "/><br /><sub><b>Jason McEwen </b></sub></a><br /><a href="https://github.com/astro-informatics/S2BALL/commits?author=jasonmcewen" title="Code">💻</a> <a href="https://github.com/astro-informatics/S2BALL/pulls?q=is%3Apr+reviewed-by%3Ajasonmcewen" title="Reviewed Pull Requests">👀</a> <a href="#ideas-jasonmcewen" title="Ideas, Planning, & Feedback">🤔</a></td>
+            </tr>
+        </tbody>
+        </table>
+    </embed>
+    
 Attribution :books:
 -------------------
 
