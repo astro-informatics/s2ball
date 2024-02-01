@@ -59,7 +59,7 @@ Installation
 
 The Python dependencies for the `S2BALL` package are listed in the file
 `requirements/requirements-core.txt` and will be automatically installed
-into the active python environment by [pip](https://pypi.org) when running
+into the active python environment by `pip <https://pypi.org>`_ when running
 
 .. code-block:: bash
 
