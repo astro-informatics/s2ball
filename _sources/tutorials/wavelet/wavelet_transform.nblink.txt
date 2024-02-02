@@ -1,0 +1,3 @@
+{
+    "path": "../../../notebooks/ball_wavelet_transform.ipynb"
+}
