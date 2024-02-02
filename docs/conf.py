@@ -20,14 +20,14 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-project = "S2FFT"
-copyright = "2023, Matthew Price and Jason McEwen"
-author = "Matthew Price, Jason McEwen, Matthew Graham, Sofia Miñano, Devaraj Gopinathan"
+project = "S2BALL"
+copyright = "2024, Matthew Price and Jason McEwen"
+author = "Matthew Price, Jason McEwen"
 
 # The short X.Y version
-version = "1.0.1"
+version = "0.0.1"
 # The full version, including alpha/beta/rc tags
-release = "1.0.1"
+release = "0.0.1"
 
 
 # -- General configuration ---------------------------------------------------
@@ -94,7 +94,7 @@ html_theme_options = {
     "logo_only": True,
     "display_version": False,
     "navbar_align": "left",
-    "announcement": "s2fft is currently in an open beta, please provide feedback on GitHub",
+    "announcement": "s2ball is currently in an open alpha, please provide feedback on GitHub",
     "show_toc_level": 2,
     "show_nav_level": 1,
     "header_links_before_dropdown": 5,
@@ -120,13 +120,13 @@ html_theme_options = {
         # },
         {
             "name": "GitHub",
-            "url": "https://github.com/astro-informatics/s2fft/",
+            "url": "https://github.com/astro-informatics/s2ball/",
             "icon": "fa-brands fa-github fa-2x",
             "type": "fontawesome",
         },
         {
             "name": "CodeCov",
-            "url": "https://app.codecov.io/gh/astro-informatics/s2fft",
+            "url": "https://app.codecov.io/gh/astro-informatics/s2ball",
             "icon": "_static/codecov.png",
             "type": "local",
         },
@@ -167,7 +167,7 @@ panels_add_bootstrap_css = False
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "S2FFTdoc"
+htmlhelp_basename = "S2BALLdoc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -175,9 +175,9 @@ htmlhelp_basename = "S2FFTdoc"
 latex_documents = [
     (
         master_doc,
-        "S2FFT.tex",
-        "S2FFT Documentation",
-        "Matthew Price, Jason McEwen, Matthew Graham, Sofia Miñano, Devaraj Gopinathan",
+        "S2BALL.tex",
+        "S2BALL Documentation",
+        "Matthew Price, Jason McEwen",
         "manual",
     ),
 ]
@@ -187,7 +187,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "s2fft", "S2FFT Documentation", [author], 1)]
+man_pages = [(master_doc, "s2ball", "S2BALL Documentation", [author], 1)]
 
 
 # -- Options for Epub output -------------------------------------------------

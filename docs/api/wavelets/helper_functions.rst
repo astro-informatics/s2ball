@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-quadrature
+Bandlimits & Indexing
 **************************
-.. automodule:: s2fft.utils.quadrature
+.. automodule:: s2ball.wavelets.helper_functions
    :members: 

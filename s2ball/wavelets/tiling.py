@@ -178,8 +178,22 @@ def compute_wav_lmp(
     return wav_lmp, scal_lmp.astype(np.complex128)
 
 
-def tiling_axisym(L: int, P: int, lam_l: float, lam_p: float) -> np.ndarray:
-    """Axisymmetric tiling functions"""
+def tiling_axisym(
+    L: int, P: int, lam_l: float, lam_p: float
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Axisymmetric tiling functions
+
+    Args:
+        L (int): Harmonic band-limit.
+        P (int): Radial band-limit.
+        lam_l (float): Wavelet angular scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets.
+        lam_p (float): Wavelet radial scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets.
+
+    Returns:
+        Tuple[np.ndarray, np.ndarray]: Tuple of axisymmetric tiling functions.
+    """
     Jl = j_max(L, lam_l)
     Jp = j_max(P, lam_p)
 

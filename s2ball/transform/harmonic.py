@@ -166,7 +166,7 @@ def inverse(
 
 
 def inverse_transform(flm: np.ndarray, legendre_kernel: np.ndarray):
-    r"""Compute the forward spherical harmonic transform with Numpy.
+    r"""Compute the inverse spherical harmonic transform with Numpy.
 
     This transform trivially supports batching.
 

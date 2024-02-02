@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-Turok & Bucher
+Wigner
 **************************
-.. automodule:: s2fft.recursions.turok
+.. automodule:: s2ball.transform.wigner
    :members: 

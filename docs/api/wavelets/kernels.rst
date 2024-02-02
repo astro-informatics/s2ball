@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-Wigner Transform
+Generating Functions
 **************************
-.. automodule:: s2fft.base_transforms.wigner
+.. automodule:: s2ball.wavelets.kernels
    :members: 

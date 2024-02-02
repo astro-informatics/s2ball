@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-Spherical Harmonic Transform
+Wigner-Laguerre
 **************************
-.. automodule:: s2fft.precompute_transforms.spherical
+.. automodule:: s2ball.transform.wigner_laguerre
    :members: 

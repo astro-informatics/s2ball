@@ -108,9 +108,7 @@ def construct_legendre_matrix_inverse(
         if not os.path.isdir("{}/".format(save_dir)):
             os.mkdir(save_dir)
         save_dir = save_dir + "/"
-        filename = "{}legendre_inverse_matrix_{}_spin_{}".format(
-            save_dir, L, spin
-        )
+        filename = "{}legendre_inverse_matrix_{}_spin_{}".format(save_dir, L, spin)
     else:
         filename = "legendre_inverse_matrix_{}_spin_{}".format(L, spin)
 
@@ -141,7 +139,7 @@ def compute_legendre_warning(L):
 def load_legendre_matrix(
     L: int, save_dir: str = ".matrices", forward: bool = True, spin: int = 0
 ) -> np.ndarray:
-    """Construct associated Legendre inverse matrix for precompute method.
+    """Load/construct associated Legendre inverse matrix for precompute method.
 
     Args:
         L (int): Harmonic band-limit.

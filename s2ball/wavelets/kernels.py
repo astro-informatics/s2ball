@@ -18,8 +18,7 @@ def tiling_integrand(t: float, lam: float = 2.0) -> float:
     Returns:
         float: Value of tiling integrand for given :math:`t` and scaling factor.
     Note:
-        [1] B. Leidstedt et. al., "S2LET: A code to perform fast wavelet analysis on
-            the sphere", A&A, vol. 558, p. A128, 2013.
+        [1] B. Leidstedt et. al., "S2LET: A code to perform fast wavelet analysis on the sphere", A&A, vol. 558, p. A128, 2013.
     """
     s_arg = (t - (1 / lam)) * (2.0 * lam / (lam - 1)) - 1
 
@@ -67,15 +66,22 @@ def part_scaling_fn(a: float, b: float, n: int, lam: float = 2.0) -> float:
 def k_lam(L: int, lam: float = 2.0, quad_iters: int = 300) -> float:
     r"""Compute function :math:`k_{\lambda}` used as a wavelet generating function.
     Specifically, this function is derived in [1] and is given by
+
     .. math::
+
         k_{\lambda} \equiv \frac{ \int_t^1 \frac{\text{d}t^{\prime}}{t^{\prime}}
         s_{\lambda}^2(t^{\prime})}{ \int_{\frac{1}{\lambda}}^1
         \frac{\text{d}t^{\prime}}{t^{\prime}} s_{\lambda}^2(t^{\prime})},
+
     where the integrand is defined to be
+
     .. math::
+
         s_{\lambda} \equiv s \Big ( \frac{2\lambda}{\lambda - 1}(t-\frac{1}{\lambda})
         - 1 \Big ),
+
     for infinitely differentiable Cauchy-Schwartz function :math:`s(t) \in C^{\infty}`.
+
     Args:
         L (int): Harmonic band-limit.
         lam (float, optional): Wavelet parameter which determines the scale factor
@@ -85,11 +91,10 @@ def k_lam(L: int, lam: float = 2.0, quad_iters: int = 300) -> float:
             integration. Defaults to 300.
     Returns:
         (np.ndarray): Value of :math:`k_{\lambda}` computed for values between
-            :math:`\frac{1}{\lambda}` and 1, parametrised by :math:`\el` as required to
+            :math:`\frac{1}{\lambda}` and 1, parametrised by :math:`\ell` as required to
             compute the axisymmetric filters in :func:`~tiling_axisym`.
     Note:
-        [1] B. Leidstedt et. al., "S2LET: A code to perform fast wavelet analysis on the
-            sphere", A&A, vol. 558, p. A128, 2013.
+        [1] B. Leidstedt et. al., "S2LET: A code to perform fast wavelet analysis on the sphere", A&A, vol. 558, p. A128, 2013.
     """
 
     J = math.ceil(np.log(L) / np.log(lam))
@@ -105,8 +110,7 @@ def k_lam(L: int, lam: float = 2.0, quad_iters: int = 300) -> float:
                 k[j, l] = 0
             else:
                 k[j, l] = (
-                    part_scaling_fn(l / lam**j, 1.0, quad_iters, lam)
-                    / normalisation
+                    part_scaling_fn(l / lam**j, 1.0, quad_iters, lam) / normalisation
                 )
 
     return k
@@ -115,20 +119,15 @@ def k_lam(L: int, lam: float = 2.0, quad_iters: int = 300) -> float:
 def tiling_direction(L: int, N: int) -> np.ndarray:
     r"""Generates the harmonic coefficients for the directionality component of the
         tiling functions.
-    Formally, this function implements the follow equation
-    .. math::
-        _{s}\eta_{\el m} = \nu \vu \sqrt{\frac{1}{2^{\gamma}} \big ( \binom{\gamma}{
-                (\gamma - m)/2} \big )}
-    which was first derived in `[1] <https://arxiv.org/pdf/1211.1680.pdf>`_.
+
     Args:
         L (int): Harmonic band-limit.
         N (int): Upper orientational band-limit.
     Returns:
         np.ndarray: Harmonic coefficients of directionality components
-            :math:`_{s}\eta_{\el m}`.
+            :math:`_{s}\eta_{\ell m}`.
     Notes:
-        [1] J. McEwen et. al., "Directional spin wavelets on the sphere", arXiv preprint
-            arXiv:1509.06749 (2015).
+        [1] J. McEwen et. al., "Directional spin wavelets on the sphere", arXiv preprint arXiv:1509.06749 (2015).
     """
     if N % 2:
         nu = 1
@@ -146,8 +145,7 @@ def tiling_direction(L: int, N: int) -> np.ndarray:
         for m in range(-el, el + 1):
             if abs(m) < N and (N + m) % 2:
                 s_elm[el, L - 1 + m] = nu * np.sqrt(
-                    (binomial_coefficient(gamma, ((gamma - m) / 2)))
-                    / (2**gamma)
+                    (binomial_coefficient(gamma, ((gamma - m) / 2))) / (2**gamma)
                 )
             else:
                 s_elm[el, L - 1 + m] = 0.0

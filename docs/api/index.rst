@@ -3,20 +3,16 @@
 **************************
 API
 **************************
-Automatically generated documentation for ``S2FFT`` APIs. All functionality is accessible 
-through a pip installation of the ``S2FFT`` package. Below is an overview of the 
-directory structure for the software.
-
-.. image:: ../assets/figures/software_overview.png
+Automatically generated documentation for ``S2BALL`` APIs. All functionality is accessible 
+through a pip installation of the ``S2BALL`` package.
 
 .. toctree::
    :hidden:
    :maxdepth: 1
    :caption: Namespaces
 
-   transforms/index
-   precompute_transforms/index
-   base_transforms/index
+   transform/index
+   constructor/index
    sampling/index
-   recursions/index
+   wavelets/index
    utility/index

@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-resampling
+Wigner Matrices
 **************************
-.. automodule:: s2fft.utils.resampling
+.. automodule:: s2ball.construct.wigner_constructor
    :members: 

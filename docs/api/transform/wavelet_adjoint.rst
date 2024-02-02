@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-quadrature_jax
+Adjoint ball wavelet
 **************************
-.. automodule:: s2fft.utils.quadrature_jax
+.. automodule:: s2ball.transform.ball_wavelet_adjoint
    :members: 

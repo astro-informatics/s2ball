@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-Turok & Bucher JAX
+Legendre Matrices
 **************************
-.. automodule:: s2fft.recursions.turok_jax
+.. automodule:: s2ball.construct.legendre_constructor
    :members: 

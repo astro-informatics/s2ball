@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-constructor
+Spherical harmonic
 **************************
-.. automodule:: s2fft.precompute_transforms.construct
+.. automodule:: s2ball.transform.harmonic
    :members: 

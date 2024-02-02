@@ -184,7 +184,7 @@ def inverse(
 
 
 def inverse_transform(fnlm: np.ndarray, kernel: np.ndarray, L: int) -> np.ndarray:
-    r"""Compute the forward Wigner transform with Numpy.
+    r"""Compute the inverse Wigner transform with Numpy.
 
     Args:
         fnlm (np.ndarray): Wigner coefficients, with shape: [2N-1, L, 2L-1].

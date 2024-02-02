@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-Wigner Transform
+Laguerre Sampling
 **************************
-.. automodule:: s2fft.precompute_transforms.wigner
+.. automodule:: s2ball.sampling.laguerre_sampling
    :members: 

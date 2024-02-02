@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-Spherical samples
+Ball wavelet
 **************************
-.. automodule:: s2fft.sampling.s2_samples
+.. automodule:: s2ball.transform.ball_wavelet
    :members: 

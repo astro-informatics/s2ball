@@ -25,6 +25,41 @@ def forward(
     method: str = "jax",
     save_dir: str = ".matrices",
 ) -> Tuple[List[List[np.ndarray]], np.ndarray]:
+    r"""Compute the forward adjoint directional wavelet transform on the ball.
+
+    This transform does not yet support batching, though this is straightforward
+    to add.
+
+    Args:
+        f_wav (List[List[np.ndarray]]): Multiresolution wavelet coefficients.
+        f_scal (np.ndarray): Scaling coefficients.
+        wav_lmp (List[List[np.ndarray]]): Multiresolution wavelet filters.
+        scal_lmp (np.ndarray): Scaling filters.
+        L (int): Harmonic band-limit.
+        N (int): Directional band-limit. Must be < L.
+        P (int): Radial band-limit.
+        lam_l (float): Wavelet angular scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets.
+        lam_p (float): Wavelet radial scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets.
+        tau (float): Laguerre polynomial scale factor.
+        method (str, optional): Evaluation method in {"numpy", "jax"}.
+            Defaults to "jax".
+        save_dir (str, optional): Directory in which to save precomputed matrices.
+            Defaults to ".matrices".
+
+    Raises:
+        ValueError: Method not in {"numpy", "jax"}.
+
+    Returns:
+        np.ndarray: Signal on the ball, with shape [P, L, 2L-1].
+
+    Note:
+        Currently only `Leistedt & McEwen <https://arxiv.org/pdf/1205.0792.pdf>`_
+        sampling on the ball is supported, though this approach can be
+        extended to alternate sampling schemes, e.g. HEALPix+. Also see `Price & McEwen
+        <https://arxiv.org/pdf/2105.05518.pdf>`_ for details on directionality.
+    """
     Jl = j_max(L, lam_l)
     Jp = j_max(P, lam_p)
 

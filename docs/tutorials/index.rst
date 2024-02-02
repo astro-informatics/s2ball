@@ -1,64 +1,89 @@
-ls:html_theme.sidebar_secondary.remove:
+:html_theme.sidebar_secondary.remove:
 
 **************************
 Notebooks
 **************************
-A series of tutorial notebooks which go through the absolute base level application of 
-``S2FFT`` apis. Post alpha release we will add examples for more involved applications, 
-in the time being feel free to contact contributors for advice! At a high-level the 
-``S2FFT`` package is structured such that the 2 primary transforms, the Wigner and 
-spherical harmonic transforms, can easily be accessed.
+A series of tutorial notebooks which go through the absolute base level application of ``S2BALL`` apis. Post alpha release we will add examples for more involved applications, in the time being feel free to contact contributors for advice! At a high-level the ``S2BALL`` package is structured such that the 4 primary transforms: the Wigner, spherical harmonic, Fourier-Laguerre, and Wigner-Laguerre transforms, can easily be accessed.
 
 Usage |:rocket:|
 -----------------
-To import and use ``S2FFT``  is as simple follows: 
+To apply the transforms provided by ``S2BALL`` one need only import the package and apply the respective transform, which is as simple as doing the following: 
+
+.. code-block:: Python
+
+    from s2ball.transform import *
+    import numpy as np 
+
+    # Load some data
+    f = np.load("path_to_your_data.npy")
+
+    # Select your method: JAX is recommended even on CPU for JIT compilation.
+    alg = ["numpy", "jax"]
 
 +-------------------------------------------------------+------------------------------------------------------------+
-|For a signal on the sphere                             |For a signal on the rotation group                          |
+|and for data on the sphere with shape :math:`[L, 2L-1]`|or data on SO(3) with shape :math:`[2N-1, L, 2L-1]`         |
 |                                                       |                                                            |
 |.. code-block:: Python                                 |.. code-block:: Python                                      |
 |                                                       |                                                            |
-|   # Compute harmonic coefficients                     |   # Compute Wigner coefficients                            |
-|   flm = s2fft.forward_jax(f, L)                       |   flmn = s2fft.wigner.forward_jax(f, L, N)                 |
+|   L = L                                               |   L = L; N = N                                             |
 |                                                       |                                                            |
-|   # Map back to pixel-space signal                    |   # Map back to pixel-space signal                         |
-|   f = s2fft.inverse_jax(flm, L)                       |   f = s2fft.wigner.inverse_jax(flmn, L, N)                 |
+|   # Compute harmonic coefficients                     |   # Compute Wigner coefficients                            |
+|   flm = harmonic.forward(f, L, alg)                   |   flmn = wigner.forward(f, L, N, alg)                      |
+|                                                       |                                                            |
+|   # Sythensise signal f                               |   # Sythensise signal f                                    |
+|   f = harmonic.inverse(flm, L, alg)                   |   f = wigner.inverse(flmn, L, N, alg)                      |
 +-------------------------------------------------------+------------------------------------------------------------+
 
++---------------------------------------------------+---------------------------------------------------------+
+|or data on the ball with shape :math:`[P, L, 2L-1]`|or with shape :math:`[P, 2N-1, L, 2L-1]`                 |
+|                                                   |                                                         |
+|.. code-block:: Python                             |.. code-block:: Python                                   |
+|                                                   |                                                         |
+|   L = L; P = P                                    |   L = L; N = N; P = P                                   |
+|                                                   |                                                         |
+|   # Compute spherical-Laguerre coefficients       |   # Compute Wigner coefficients                         |
+|   flmp = laguerre.forward(f, L, P, alg)           |   flmnp = wigner_laguerre.forward(f, L, N, P, alg)      |
+|                                                   |                                                         |
+|   # Sythensise signal f                           |   # Sythensise signal f                                 |
+|   f = laguerre.inverse(flmp, L, P, alg)           |   f = wigner_laguerre.inverse(flmnp, L, N, P, alg)      |
++---------------------------------------------------+---------------------------------------------------------+
+
+However, for repeated application of these transforms it is optimal to instead precompile 
+various kernels which can be placed on device to minimise i/o during *e.g.* training. This 
+operational mode can be seen throughout our examples, found `here 
+<https://github.com/astro-informatics/s2ball/tree/main/notebooks>`_.
 
 Benchmarking |:hourglass_flowing_sand:|
 -------------------------------------
-We benchmarked the spherical harmonic and Wigner transforms implemented in ``S2FFT``
-against the C implementations in the `SSHT <https://github.com/astro-informatics/ssht>`_
-pacakge. 
+The various generalized Fourier and wavelet transforms supported by ``S2BALL`` were 
+benchmarked against their ``C`` counterparts over a variety of parameter configurations. 
+Each benchmark has been averaged over many runs, though here we provide only the mean. 
+All CPU based operations were executed on a single core from a AMD EPYC 7702 64-core 
+processor, whereas all JAX operations were executed on a single NVIDIA A100 graphics 
+processing unit. The Jupyter notebooks for each benchmark can be found `here 
+<https://github.com/astro-informatics/s2ball/tree/main/notebooks>`_.
 
-A brief summary is shown in the table below for the recursion (left) and precompute
-(right) algorithms, with ``S2FFT`` running on GPUs (for further details see Price &
-McEwen, in prep.).  Note that our compute time is agnostic to spin number (which is not
-the case for many other methods that scale linearly with spin).
+Note that benchmarking is restricted to scalar (spin 0 ) fields, though spin is supported 
+throughout ``S2BALL``. Further note that for Wigner tests we set N=5, and in our 
+Laguerre and wavelet benchmarking we set N=1, as FLAG/FLAGLET otherwise take 
+excessive compute. Finally, ``S2BALL``` transforms trivially support batching and 
+so can, in many cases, gain several more orders of magnitude acceleration.
+    
+|harmonic| |wigner| 
 
-+------+-----------+-----------+----------+-----------+----------+----------+---------+
-|      |       Recursive Algorithm        |       Precompute Algorithm                |
-+------+-----------+-----------+----------+-----------+----------+----------+---------+
-| L    | Wall-Time | Speed-up  | Error    | Wall-Time | Speed-up | Error    | Memory  |
-+------+-----------+-----------+----------+-----------+----------+----------+---------+
-| 64   | 3.6 ms    | 0.88      | 1.81E-15 | 52.4 μs   | 60.5     | 1.67E-15 | 4.2 MB  |
-+------+-----------+-----------+----------+-----------+----------+----------+---------+
-| 128  | 7.26 ms   | 1.80      | 3.32E-15 | 162 μs    | 80.5     | 3.64E-15 | 33 MB   |
-+------+-----------+-----------+----------+-----------+----------+----------+---------+
-| 256  | 17.3 ms   | 6.32      | 6.66E-15 | 669 μs    | 163      | 6.74E-15 | 268 MB  |
-+------+-----------+-----------+----------+-----------+----------+----------+---------+
-| 512  | 58.3 ms   | 11.4      | 1.43E-14 | 3.6 ms    | 184      | 1.37E-14 | 2.14 GB |
-+------+-----------+-----------+----------+-----------+----------+----------+---------+
-| 1024 | 194 ms    | 32.9      | 2.69E-14 | 32.6 ms   | 195      | 2.47E-14 | 17.1 GB |
-+------+-----------+-----------+----------+-----------+----------+----------+---------+
-| 2048 | 1.44 s    | 49.7      | 5.17E-14 | N/A       | N/A      | N/A      | N/A     |
-+------+-----------+-----------+----------+-----------+----------+----------+---------+
-| 4096 | 8.48 s    | 133.9     | 1.06E-13 | N/A       | N/A      | N/A      | N/A     |
-+------+-----------+-----------+----------+-----------+----------+----------+---------+
-| 8192 | 82 s      | 110.8     | 2.14E-13 | N/A       | N/A      | N/A      | N/A     |
-+------+-----------+-----------+----------+-----------+----------+----------+---------+
+|laguerre| |wavelet|
 
+.. |harmonic| image:: ../assets/figures/harmonic.png
+    :width: 48%
+
+.. |wigner| image:: ../assets/figures/wigner.png
+    :width: 48%
+
+.. |laguerre| image:: ../assets/figures/laguerre.png
+    :width: 48%
+
+.. |wavelet| image:: ../assets/figures/wavelet.png
+    :width: 48%
 
 .. toctree::
    :hidden:
@@ -67,3 +92,6 @@ the case for many other methods that scale linearly with spin).
 
    spherical_harmonic/spherical_harmonic_transform.nblink
    wigner/wigner_transform.nblink
+   laguerre/laguerre_transform.nblink
+   wigner_laguerre/wigner_laguerre_transform.nblink
+   wavelet/wavelet_transform.nblink

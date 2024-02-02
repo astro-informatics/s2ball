@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-logs
+Wavelet Matrices
 **************************
-.. automodule:: s2fft.logs
+.. automodule:: s2ball.construct.wavelet_constructor
    :members: 
