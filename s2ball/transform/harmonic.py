@@ -1,18 +1,14 @@
 import numpy as np
 import jax.numpy as jnp
-import s2ball
-
+from s2ball.construct import matrix
 from jax import jit
 from functools import partial
-from jax.config import config
-
-config.update("jax_enable_x64", True)
 
 
 def forward(
     f: np.ndarray,
     L: int,
-    legendre_kernel: np.ndarray = None,
+    legendre_matrices: np.ndarray = None,
     method: str = "jax",
     spin: int = 0,
     save_dir: str = ".matrices",
@@ -25,7 +21,8 @@ def forward(
     Args:
         f (np.ndarray): Signal on sphere, with shape: [L, 2L-1].
         L (int): Harmonic band-limit.
-        legendre_kernel (np.ndarray): Legendre transform kernel.
+        legendre_matrices (np.ndarray, optional): List of Legendre transform matrices.
+            Defaults to None.
         method (str, optional): Evaluation method in {"numpy", "jax"}.
             Defaults to "jax".
         spin (int, optional): Harmonic spin. Defaults to 0.
@@ -45,33 +42,43 @@ def forward(
         sampling on the sphere is supported, though this approach can be
         extended to alternate sampling schemes, e.g. HEALPix.
     """
-    if legendre_kernel is None:
-        kernel = s2ball.construct.legendre_constructor.load_legendre_matrix(
-            L=L, forward=True, spin=spin, save_dir=save_dir
+    if legendre_matrices is None:
+        matrices = matrix.generate_matrices(
+            transform="spherical_harmonic", L=L, spin=spin, save_dir=save_dir
         )
+
     else:
-        kernel = legendre_kernel
+        matrices = legendre_matrices
+
+    shift = -1 if adjoint else 0
 
     if method == "numpy":
-        return inverse_transform(f, kernel) if adjoint else forward_transform(f, kernel)
+        return (
+            inverse_transform(f, matrices, shift)
+            if adjoint
+            else forward_transform(f, matrices)
+        )
     elif method == "jax":
         return (
-            inverse_transform_jax(f, kernel)
+            inverse_transform_jax(f, matrices, shift)
             if adjoint
-            else forward_transform_jax(f, kernel)
+            else forward_transform_jax(f, matrices)
         )
     else:
         raise ValueError(f"Method {method} not recognised.")
 
 
-def forward_transform(f: np.ndarray, legendre_kernel: np.ndarray) -> np.ndarray:
+def forward_transform(
+    f: np.ndarray, legendre_matrices: np.ndarray, shift: int = 0
+) -> np.ndarray:
     r"""Compute the forward spherical harmonic transform with Numpy.
 
     This transform trivially supports batching.
 
     Args:
         f (np.ndarray): Signal on sphere, with shape: [L, 2L-1].
-        legendre_kernel (np.ndarray): Legendre transform kernel.
+        legendre_matrices (np.ndarray): List of Legendre transform matrices.
+        shift (int, optional): Used internally to handle adjoint transforms.
 
     Returns:
         np.ndarray: Spherical harmonic coefficients with shape [L, 2L-1].
@@ -82,19 +89,22 @@ def forward_transform(f: np.ndarray, legendre_kernel: np.ndarray) -> np.ndarray:
         extended to alternate sampling schemes, e.g. HEALPix.
     """
     fm = np.fft.fft(f)
-    flm = np.einsum("...lmi, ...im->...lm", legendre_kernel, fm)
+    flm = np.einsum("...lmi, ...im->...lm", legendre_matrices[shift], fm)
     return np.fft.fftshift(flm, axes=-1)
 
 
-@partial(jit)
-def forward_transform_jax(f: jnp.ndarray, legendre_kernel: jnp.ndarray) -> jnp.ndarray:
+@partial(jit, static_argnums=(2))
+def forward_transform_jax(
+    f: jnp.ndarray, legendre_matrices: jnp.ndarray, shift: int = 0
+) -> jnp.ndarray:
     r"""Compute the forward spherical harmonic transform with JAX and JIT.
 
     This transform trivially supports batching.
 
     Args:
         f (jnp.ndarray): Signal on sphere, with shape: [L, 2L-1].
-        legendre_kernel (jnp.ndarray): Legendre transform kernel.
+        legendre_matrices (jnp.ndarray): Legendre transform kernel.
+        shift (int, optional): Used internally to handle adjoint transforms.
 
     Returns:
         jnp.ndarray: Spherical harmonic coefficients with shape [L, 2L-1].
@@ -105,14 +115,16 @@ def forward_transform_jax(f: jnp.ndarray, legendre_kernel: jnp.ndarray) -> jnp.n
         extended to alternate sampling schemes, e.g. HEALPix.
     """
     fm = jnp.fft.fft(f)
-    flm = jnp.einsum("...lmi, ...im->...lm", legendre_kernel, fm, optimize=True)
+    flm = jnp.einsum(
+        "...lmi, ...im->...lm", legendre_matrices[shift], fm, optimize=True
+    )
     return jnp.fft.fftshift(flm, axes=-1)
 
 
 def inverse(
     flm: np.ndarray,
     L: int,
-    legendre_kernel: np.ndarray = None,
+    legendre_matrices: np.ndarray = None,
     method: str = "jax",
     spin: int = 0,
     save_dir: str = ".matrices",
@@ -125,7 +137,8 @@ def inverse(
     Args:
         flm (np.ndarray): Harmonic coefficients, with shape: [L, 2L-1].
         L (int): Harmonic band-limit.
-        legendre_kernel (np.ndarray): Legendre transform kernel.
+        legendre_matrices (np.ndarray, optional): List of Legendre transform matrices.
+            Defaults to None.
         method (str, optional): Evaluation method in {"numpy", "jax"}.
             Defaults to "jax".
         spin (int, optional): Harmonic spin. Defaults to 0.
@@ -142,37 +155,40 @@ def inverse(
         sampling on the sphere is supported, though this approach can be
         extended to alternate sampling schemes, e.g. HEALPix.
     """
-    if legendre_kernel is None:
-        kernel = s2ball.construct.legendre_constructor.load_legendre_matrix(
-            L=L, forward=False, spin=spin, save_dir=save_dir
+    if legendre_matrices is None:
+        matrices = matrix.generate_matrices(
+            transform="spherical_harmonic", L=L, spin=spin, save_dir=save_dir
         )
     else:
-        kernel = legendre_kernel
+        matrices = legendre_matrices
+
+    shift = -1 if adjoint else 0
 
     if method == "numpy":
         return (
-            forward_transform(flm, kernel)
+            forward_transform(flm, matrices, shift)
             if adjoint
-            else inverse_transform(flm, kernel)
+            else inverse_transform(flm, matrices)
         )
     elif method == "jax":
         return (
-            forward_transform_jax(flm, kernel)
+            forward_transform_jax(flm, matrices, shift)
             if adjoint
-            else inverse_transform_jax(flm, kernel)
+            else inverse_transform_jax(flm, matrices)
         )
     else:
         raise ValueError(f"Method {method} not recognised.")
 
 
-def inverse_transform(flm: np.ndarray, legendre_kernel: np.ndarray):
+def inverse_transform(flm: np.ndarray, legendre_matrices: np.ndarray, shift: int = 0):
     r"""Compute the inverse spherical harmonic transform with Numpy.
 
     This transform trivially supports batching.
 
     Args:
         flm (np.ndarray): Harmonic coefficients, with shape: [L, 2L-1].
-        legendre_kernel (np.ndarray): Legendre transform kernel.
+        legendre_matrices (np.ndarray): List of Legendre transform matrices.
+        shift (int, optional): Used internally to handle adjoint transforms.
 
     Returns:
         np.ndarray: Pixel-space coefficients with shape [L, 2L-1].
@@ -183,13 +199,13 @@ def inverse_transform(flm: np.ndarray, legendre_kernel: np.ndarray):
         extended to alternate sampling schemes, e.g. HEALPix.
     """
     flm_shift = np.fft.ifftshift(flm, axes=-1)
-    fm = np.einsum("...lmi, ...lm->...im", legendre_kernel, flm_shift)
+    fm = np.einsum("...lmi, ...lm->...im", legendre_matrices[1 + shift], flm_shift)
     return np.fft.ifft(fm, norm="forward")
 
 
-@partial(jit)
+@partial(jit, static_argnums=(2))
 def inverse_transform_jax(
-    flm: jnp.ndarray, legendre_kernel: jnp.ndarray
+    flm: jnp.ndarray, legendre_matrices: jnp.ndarray, shift: int = 0
 ) -> jnp.ndarray:
     r"""Compute the inverse spherical harmonic transform via with JAX and JIT.
 
@@ -197,8 +213,8 @@ def inverse_transform_jax(
 
     Args:
         flm (jnp.ndarray): Harmonic coefficients, with shape: [L, 2L-1].
-
-        legendre_kernel (jnp.ndarray): Legendre transform kernel.
+        legendre_matrices (jnp.ndarray): List of Legendre transform matrices.
+        shift (int, optional): Used internally to handle adjoint transforms.
 
     Returns:
         jnp.ndarray: Pixel-space coefficients with shape [L, 2L-1].
@@ -209,5 +225,7 @@ def inverse_transform_jax(
         extended to alternate sampling schemes, e.g. HEALPix.
     """
     flm_shift = jnp.fft.ifftshift(flm, axes=-1)
-    fm = jnp.einsum("...lmi, ...lm->...im", legendre_kernel, flm_shift, optimize=True)
+    fm = jnp.einsum(
+        "...lmi, ...lm->...im", legendre_matrices[1 + shift], flm_shift, optimize=True
+    )
     return jnp.fft.ifft(fm, norm="forward")

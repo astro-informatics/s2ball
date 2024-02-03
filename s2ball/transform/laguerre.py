@@ -1,14 +1,9 @@
 import numpy as np
 import jax.numpy as jnp
 from s2ball.transform import harmonic
-from s2ball.sampling import laguerre_sampling
-from s2ball.construct import legendre_constructor
-
+from s2ball.construct import matrix
 from jax import jit
 from functools import partial
-from jax.config import config
-
-config.update("jax_enable_x64", True)
 
 
 def forward(
@@ -16,8 +11,7 @@ def forward(
     L: int,
     P: int,
     tau: float,
-    kernel: np.ndarray = None,
-    lag_poly: np.ndarray = None,
+    matrices: np.ndarray = None,
     method: str = "jax",
     spin: int = 0,
     save_dir: str = ".matrices",
@@ -32,8 +26,8 @@ def forward(
         L (int): Harmonic band-limit.
         P (int): Radial band-limit.
         tau (float): Laguerre polynomial scale factor.
-        kernel (np.ndarray, optional): Legendre transform kernel. Defaults to None.
-        lag_poly (np.ndarray, optional): Laguerre polynomial kernel. Defaults to None.
+        matrices (np.ndarray, optional): List of matrices corresponding to all
+            necessary precomputed values. Defaults to None.
         method (str, optional): Evaluation method in {"numpy", "jax"}.
             Defaults to "jax".
         spin (int, optional): _description_. Defaults to 0.
@@ -53,32 +47,36 @@ def forward(
         sampling on the ball is supported, though this approach can be
         extended to alternate sampling schemes, e.g. HEALPix+.
     """
-    if lag_poly is None:
-        lag_poly = laguerre_sampling.polynomials(P, tau, forward=True)
-    if kernel is None:
-        kernel = legendre_constructor.load_legendre_matrix(
-            L=L, forward=True, spin=spin, save_dir=save_dir
+    if matrices is None:
+        matrices = matrix.generate_matrices(
+            transform="spherical_laguerre",
+            L=L,
+            P=P,
+            spin=spin,
+            tau=tau,
+            save_dir=save_dir,
         )
+
+    shift = -1 if adjoint else 0
+
     if method == "numpy":
         return (
-            inverse_transform(f, kernel, lag_poly)
+            inverse_transform(f, matrices, shift)
             if adjoint
-            else forward_transform(f, kernel, lag_poly)
+            else forward_transform(f, matrices)
         )
     elif method == "jax":
         return (
-            inverse_transform_jax(f, kernel, lag_poly)
+            inverse_transform_jax(f, matrices, shift)
             if adjoint
-            else forward_transform_jax(f, kernel, lag_poly)
+            else forward_transform_jax(f, matrices)
         )
     else:
         raise ValueError(f"Method {method} not recognised.")
 
 
 def forward_transform(
-    f: np.ndarray,
-    kernel: np.ndarray,
-    lag_poly: np.ndarray,
+    f: np.ndarray, matrices: np.ndarray, shift: int = 0
 ) -> np.ndarray:
     """Compute the forward spherical-Laguerre transform with Numpy.
 
@@ -86,8 +84,9 @@ def forward_transform(
 
     Args:
         f (np.ndarray): Signal on the ball, with shape [P, L, 2L-1].
-        kernel (np.ndarray): Legendre transform kernel.
-        lag_poly (np.ndarray): Laguerre polynomial kernel.
+        matrices (np.ndarray): List of matrices corresponding to all
+            necessary precomputed values.
+        shift (int, optional): Used internally to handle adjoint transforms.
 
     Returns:
         np.ndarray: Spherical-Laguerre coefficients with shape [P, L, 2L-1].
@@ -97,15 +96,13 @@ def forward_transform(
         sampling on the ball is supported, though this approach can be
         extended to alternate sampling schemes, e.g. HEALPix+.
     """
-    flmr = harmonic.forward_transform(f, kernel)
-    return np.einsum("...rlm, rp -> ...plm", flmr, lag_poly)
+    flmr = harmonic.forward_transform(f, matrices[0], shift)
+    return np.einsum("...rlm, rp -> ...plm", flmr, matrices[1][shift])
 
 
-@partial(jit)
+@partial(jit, static_argnums=(2))
 def forward_transform_jax(
-    f: jnp.ndarray,
-    kernel: jnp.ndarray,
-    lag_poly: jnp.ndarray,
+    f: jnp.ndarray, matrices: jnp.ndarray, shift: int = 0
 ) -> jnp.ndarray:
     """Compute the forward spherical-Laguerre transform with JAX and JIT.
 
@@ -113,8 +110,9 @@ def forward_transform_jax(
 
     Args:
         f (jnp.ndarray): Signal on the ball, with shape [P, L, 2L-1].
-        kernel (jnp.ndarray): Legendre transform kernel.
-        lag_poly (jnp.ndarray): Laguerre polynomial kernel.
+        matrices (jnp.ndarray): List of matrices corresponding to all
+            necessary precomputed values.
+        shift (int, optional): Used internally to handle adjoint transforms.
 
     Returns:
         jnp.ndarray: Spherical-Laguerre coefficients with shape [P, L, 2L-1].
@@ -124,8 +122,8 @@ def forward_transform_jax(
         sampling on the ball is supported, though this approach can be
         extended to alternate sampling schemes, e.g. HEALPix+.
     """
-    flmr = harmonic.forward_transform_jax(f, kernel)
-    return jnp.einsum("...rlm, rp -> ...plm", flmr, lag_poly)
+    flmr = harmonic.forward_transform_jax(f, matrices[0], shift)
+    return jnp.einsum("...rlm, rp -> ...plm", flmr, matrices[1][shift])
 
 
 def inverse(
@@ -133,8 +131,7 @@ def inverse(
     L: int,
     P: int,
     tau: float,
-    kernel: np.ndarray = None,
-    lag_poly: np.ndarray = None,
+    matrices: np.ndarray = None,
     method: str = "jax",
     spin: int = 0,
     save_dir: str = ".matrices",
@@ -149,8 +146,8 @@ def inverse(
         L (int): Harmonic band-limit.
         P (int): Radial band-limit.
         tau (float): Laguerre polynomial scale factor.
-        kernel (np.ndarray, optional): Legendre transform kernel. Defaults to None.
-        lag_poly (np.ndarray, optional): Laguerre polynomial kernel. Defaults to None.
+        matrices (np.ndarray, optional): List of matrices corresponding to all
+            necessary precomputed values. Defaults to None.
         method (str, optional): Evaluation method in {"numpy", "jax"}.
             Defaults to "jax".
         spin (int, optional): _description_. Defaults to 0.
@@ -170,34 +167,36 @@ def inverse(
         sampling on the ball is supported, though this approach can be
         extended to alternate sampling schemes, e.g. HEALPix+.
     """
-
-    if lag_poly is None:
-        lag_poly = laguerre_sampling.polynomials(P, tau, forward=False)
-    if kernel is None:
-        kernel = legendre_constructor.load_legendre_matrix(
-            L=L, forward=False, spin=spin, save_dir=save_dir
+    if matrices is None:
+        matrices = matrix.generate_matrices(
+            transform="spherical_laguerre",
+            L=L,
+            P=P,
+            spin=spin,
+            tau=tau,
+            save_dir=save_dir,
         )
+
+    shift = -1 if adjoint else 0
 
     if method == "numpy":
         return (
-            forward_transform(flmp, kernel, lag_poly)
+            forward_transform(flmp, matrices, shift)
             if adjoint
-            else inverse_transform(flmp, kernel, lag_poly)
+            else inverse_transform(flmp, matrices)
         )
     elif method == "jax":
         return (
-            forward_transform_jax(flmp, kernel, lag_poly)
+            forward_transform_jax(flmp, matrices, shift)
             if adjoint
-            else inverse_transform_jax(flmp, kernel, lag_poly)
+            else inverse_transform_jax(flmp, matrices)
         )
     else:
         raise ValueError(f"Method {method} not recognised.")
 
 
 def inverse_transform(
-    flmp: np.ndarray,
-    kernel: np.ndarray,
-    lag_poly: np.ndarray,
+    flmp: np.ndarray, matrices: np.ndarray, shift: int = 0
 ) -> np.ndarray:
     """Compute the inverse spherical-Laguerre transform with Numpy.
 
@@ -205,8 +204,9 @@ def inverse_transform(
 
     Args:
         flmp (np.ndarray): Spherical-Laguerre coefficients with shape [P, L, 2L-1].
-        kernel (np.ndarray): Legendre transform kernel. Defaults to None.
-        lag_poly (np.ndarray): Laguerre polynomial kernel. Defaults to None.
+        matrices (np.ndarray): List of matrices corresponding to all
+            necessary precomputed values.
+        shift (int, optional): Used internally to handle adjoint transforms.
 
     Returns:
         np.ndarray: Signal on the ball, with shape [P, L, 2L-1].
@@ -216,15 +216,13 @@ def inverse_transform(
         sampling on the ball is supported, though this approach can be
         extended to alternate sampling schemes, e.g. HEALPix+.
     """
-    flmr = np.einsum("...plm,rp -> ...rlm", flmp, lag_poly)
-    return harmonic.inverse_transform(flmr, kernel)
+    flmr = np.einsum("...plm,rp -> ...rlm", flmp, matrices[1][1 + shift])
+    return harmonic.inverse_transform(flmr, matrices[0], shift)
 
 
-@partial(jit)
+@partial(jit, static_argnums=(2))
 def inverse_transform_jax(
-    flmp: jnp.ndarray,
-    kernel: jnp.ndarray,
-    lag_poly: jnp.ndarray,
+    flmp: jnp.ndarray, matrices: jnp.ndarray, shift: int = 0
 ) -> jnp.ndarray:
     """Compute the inverse spherical-Laguerre transform with JAX and JIT.
 
@@ -232,8 +230,9 @@ def inverse_transform_jax(
 
     Args:
         flmp (jnp.ndarray): Spherical-Laguerre coefficients with shape [P, L, 2L-1].
-        kernel (jnp.ndarray): Legendre transform kernel. Defaults to None.
-        lag_poly (jnp.ndarray): Laguerre polynomial kernel. Defaults to None.
+        matrices (jnp.ndarray): List of matrices corresponding to all
+            necessary precomputed values.
+        shift (int, optional): Used internally to handle adjoint transforms.
 
     Returns:
         jnp.ndarray: Signal on the ball, with shape [P, L, 2L-1].
@@ -243,5 +242,5 @@ def inverse_transform_jax(
         sampling on the ball is supported, though this approach can be
         extended to alternate sampling schemes, e.g. HEALPix+.
     """
-    flmr = jnp.einsum("...plm,rp -> ...rlm", flmp, lag_poly)
-    return harmonic.inverse_transform_jax(flmr, kernel)
+    flmr = jnp.einsum("...plm,rp -> ...rlm", flmp, matrices[1][1 + shift])
+    return harmonic.inverse_transform_jax(flmr, matrices[0], shift)

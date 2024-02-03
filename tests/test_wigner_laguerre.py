@@ -1,9 +1,10 @@
+from jax.config import config
+
+config.update("jax_enable_x64", True)
 import numpy as np
 import pytest
-
 from s2ball.transform import wigner_laguerre as laguerre
-from s2ball.construct.wigner_constructor import *
-from s2ball.sampling import laguerre_sampling
+from s2ball.construct import matrix
 
 L_to_test = [8, 12, 16]
 N_to_test = [2, 4, 6]
@@ -20,21 +21,16 @@ methods_to_test = ["numpy", "jax"]
 def test_roundtrip_wigner_laguerre(
     flmnp_generator, L: int, N: int, P: int, tau: float, method: str
 ):
-    wigner_forward = load_wigner_matrix(L, N, forward=True)
-    wigner_inverse = load_wigner_matrix(L, N, forward=False)
-
-    lag_poly_f = laguerre_sampling.polynomials(P, tau, forward=True)
-    lag_poly_i = laguerre_sampling.polynomials(P, tau, forward=False)
-
+    matrices = matrix.generate_matrices(
+        transform="wigner_laguerre", L=L, P=P, N=N, tau=tau
+    )
     flmnp = flmnp_generator(L, N, P)
 
-    f = laguerre.inverse(flmnp, L, N, P, tau, wigner_inverse, lag_poly_i, method)
-    flmnp = laguerre.forward(f, L, N, P, tau, wigner_forward, lag_poly_f, method)
+    f = laguerre.inverse(flmnp, L, N, P, tau, matrices, method)
+    flmnp = laguerre.forward(f, L, N, P, tau, matrices, method)
 
-    f_check = laguerre.inverse(flmnp, L, N, P, tau, wigner_inverse, lag_poly_i, method)
-    flmnp_check = laguerre.forward(
-        f_check, L, N, P, tau, wigner_forward, lag_poly_f, method
-    )
+    f_check = laguerre.inverse(flmnp, L, N, P, tau, matrices, method)
+    flmnp_check = laguerre.forward(f_check, L, N, P, tau, matrices, method)
 
     np.testing.assert_allclose(f, f_check, atol=1e-14)
     np.testing.assert_allclose(flmnp, flmnp_check, atol=1e-14)

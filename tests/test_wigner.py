@@ -1,8 +1,10 @@
+from jax.config import config
+
+config.update("jax_enable_x64", True)
 import os
 import numpy as np
 import so3
 import pytest
-
 from s2ball.transform import wigner
 from s2ball.construct.wigner_constructor import *
 from s2ball import utils
@@ -50,10 +52,7 @@ def test_legendre_matrix_constructor_compute_time_warning():
 @pytest.mark.parametrize("method", methods_to_test)
 def test_wigner_forward(flmn_generator, L: int, N: int, method: str):
     """Test wrapper implementation of forward wigner transform"""
-    save_dir = ".matrices"
     params = so3.create_parameter_dict(L=L, N=N, sampling_scheme_str="SO3_SAMPLING_MW")
-
-    wig_for = construct_wigner_matrix(L, N, save_dir)
 
     flmn_3d = flmn_generator(L=L, N=N)
     flmn_1d = utils.flmn_3d_to_1d(flmn_3d, L, N)
@@ -62,7 +61,7 @@ def test_wigner_forward(flmn_generator, L: int, N: int, method: str):
     f_3d = f_1d.reshape(2 * N - 1, L, 2 * L - 1)
 
     flmn_check = utils.flmn_1d_to_3d(so3.forward(f_1d, params), L, N)
-    flmn = wigner.forward(f_3d, L, N, wig_for, method)
+    flmn = wigner.forward(f_3d, L, N, None, method)
 
     assert np.allclose(flmn, flmn_check, atol=1e-14)
 
@@ -72,15 +71,13 @@ def test_wigner_forward(flmn_generator, L: int, N: int, method: str):
 @pytest.mark.parametrize("method", methods_to_test)
 def test_wigner_inverse(flmn_generator, L: int, N: int, method: str):
     """Test wrapper implementation of inverse wigner transform"""
-    save_dir = ".matrices"
     params = so3.create_parameter_dict(L=L, N=N, sampling_scheme_str="SO3_SAMPLING_MW")
-    wig_inv = construct_wigner_matrix_inverse(L, N, save_dir)
 
     flmn_3d = flmn_generator(L=L, N=N)
     flmn_1d = utils.flmn_3d_to_1d(flmn_3d, L, N)
 
     f_check = so3.inverse(flmn_1d, params).reshape(2 * N - 1, L, 2 * L - 1)
-    f = wigner.inverse(flmn_3d, L, N, wig_inv, method)
+    f = wigner.inverse(flmn_3d, L, N, None, method)
 
     assert np.allclose(f, f_check, atol=1e-14)
 

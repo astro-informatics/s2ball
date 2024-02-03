@@ -80,30 +80,30 @@ def quadrature(P: int) -> np.ndarray:
         if p > 100:
             h = 0.1
         supbound = infbound
-        normfac = _laguerre_rescaled(z, p, normfac)
-        temp = _laguerre_rescaled(infbound, P, normfac)
+        normfac = __laguerre_rescaled(z, p, normfac)
+        temp = __laguerre_rescaled(infbound, P, normfac)
         vinf = vsup = temp
 
         niter = 0
         while vinf * vsup >= 0 and niter < nitermax:
             supbound += h
-            vsup = _laguerre_rescaled(supbound, P, normfac)
+            vsup = __laguerre_rescaled(supbound, P, normfac)
             niter += 1
 
         niter = 0
         while vinf * vsup < 0 and niter < nitermax:
             infbound += h
-            vinf = _laguerre_rescaled(infbound, P, normfac)
+            vinf = __laguerre_rescaled(infbound, P, normfac)
             niter += 1
 
         infbound -= h
-        vinf = _laguerre_rescaled(infbound, P, normfac)
+        vinf = __laguerre_rescaled(infbound, P, normfac)
         z = infbound - vinf * (supbound - infbound) / (vsup - vinf)
 
         infbound = supbound
         for i in range(1, maxit):
-            p1 = _laguerre_rescaled(z, P, normfac)
-            p2 = _laguerre_rescaled(z, P - 1, normfac)
+            p1 = __laguerre_rescaled(z, P, normfac)
+            p2 = __laguerre_rescaled(z, P - 1, normfac)
 
             pp = P * (p1 - p2) / z
             z1 = z
@@ -114,14 +114,14 @@ def quadrature(P: int) -> np.ndarray:
 
         nodes[p] = z
 
-        denom = normfac * _laguerre_rescaled(z, P + 1, normfac)
+        denom = normfac * __laguerre_rescaled(z, P + 1, normfac)
         term = np.exp(z / 2.0) / denom
         weights[p] = z * (term / (P + 1)) ** 2
 
     return nodes, weights
 
 
-def _laguerre_rescaled(z: float, P: int, normfac: float) -> float:
+def __laguerre_rescaled(z: float, P: int, normfac: float) -> float:
     """Helper function for Gauss-Laguerre quadrature."""
     p1 = 1.0 / normfac
     p2 = 0.0
