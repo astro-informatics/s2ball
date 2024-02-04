@@ -1,8 +1,11 @@
+from jax.config import config
+
+config.update("jax_enable_x64", True)
 import numpy as np
 import pytest
-
-from s2ball.transform import laguerre, ball_wavelet, ball_wavelet_adjoint
+from s2ball.transform import laguerre, ball_wavelet
 from s2ball.wavelets.helper_functions import *
+from s2ball.construct import matrix
 
 L_to_test = [6, 8]
 P_to_test = [6, 8]
@@ -25,25 +28,24 @@ def test_roundtrip_wavelet(
     Jp = j_max(P, lam)
 
     flmp = flmp_generator(L, P)
-
     f = laguerre.inverse(flmp, L, P, tau, method=method)
 
-    f_wav, f_scal = ball_wavelet.forward(f, L, N, P, lam, lam, tau, method=method)
-    f = ball_wavelet.inverse(f_wav, f_scal, L, N, P, lam, lam, tau, method=method)
-
-    f_wav_check, f_scal_check = ball_wavelet.forward(
-        f, L, N, P, lam, lam, tau, method=method
-    )
-    f_check = ball_wavelet.inverse(
-        f_wav_check, f_scal_check, L, N, P, lam, lam, tau, method=method
+    matrices = matrix.generate_matrices(
+        transform="wavelet", L=L, N=N, P=P, tau=tau, lam_l=lam, lam_p=lam
     )
 
-    np.testing.assert_allclose(f, f_check, atol=1e-14)
-    np.testing.assert_allclose(f_scal, f_scal_check, atol=1e-14)
+    w = ball_wavelet.forward(f, L, N, P, matrices, lam, lam, tau, method=method)
+    f = ball_wavelet.inverse(w, L, N, P, matrices, lam, lam, tau, method=method)
+
+    w2 = ball_wavelet.forward(f, L, N, P, matrices, lam, lam, tau, method=method)
+    f2 = ball_wavelet.inverse(w2, L, N, P, matrices, lam, lam, tau, method=method)
+
+    np.testing.assert_allclose(f, f2, atol=1e-14)
+    np.testing.assert_allclose(w[0], w2[0], atol=1e-14)
 
     for jp in range(Jp + 1):
         for jl in range(Jl + 1):
-            np.testing.assert_allclose(f_wav[jp][jl], f_wav_check[jp][jl], atol=1e-14)
+            np.testing.assert_allclose(w[1][jp][jl], w2[1][jp][jl], atol=1e-14)
 
 
 @pytest.mark.parametrize("L", L_to_test)
@@ -60,17 +62,21 @@ def test_forward_adjoint_wavelet(
 
     flmp = flmp_generator(L, P)
     f = laguerre.inverse(flmp, L, P, tau, method=method)
-    f_wav, f_scal = ball_wavelet.forward(f, L, N, P, lam, lam, tau, method=method)
-    f_adjoint = ball_wavelet_adjoint.forward(
-        f_wav, f_scal, L, N, P, lam, lam, tau, method=method
+
+    matrices = matrix.generate_matrices(
+        transform="wavelet", L=L, N=N, P=P, tau=tau, lam_l=lam, lam_p=lam
+    )
+    w = ball_wavelet.forward(f, L, N, P, matrices, lam, lam, tau, method=method)
+    f2 = ball_wavelet.forward(
+        w, L, N, P, matrices, lam, lam, tau, method=method, adjoint=True
     )
 
-    a = np.vdot(f, f_adjoint)
-    b = np.vdot(f_scal, f_scal)
+    a = np.vdot(f, f2)
+    b = np.vdot(w[0], w[0])
 
     for jp in range(Jp + 1):
         for jl in range(Jl + 1):
-            b += np.vdot(f_wav[jp][jl], f_wav[jp][jl])
+            b += np.vdot(w[1][jp][jl], w[1][jp][jl])
 
     assert np.abs(a) == pytest.approx(np.abs(b))
 
@@ -88,22 +94,22 @@ def test_inverse_adjoint_wavelet(
     Jp = j_max(P, lam)
 
     flmp = flmp_generator(L, P)
+    matrices = matrix.generate_matrices(
+        transform="wavelet", L=L, N=N, P=P, tau=tau, lam_l=lam, lam_p=lam
+    )
+
     f = laguerre.inverse(flmp, L, P, tau, method=method)
-    f_wav, f_scal = ball_wavelet.forward(f, L, N, P, lam, lam, tau, method=method)
-
-    f_inverse = ball_wavelet.inverse(
-        f_wav, f_scal, L, N, P, lam, lam, tau, method=method
+    w = ball_wavelet.forward(f, L, N, P, matrices, lam, lam, tau, method=method)
+    f2 = ball_wavelet.inverse(w, L, N, P, matrices, lam, lam, tau, method=method)
+    w2 = ball_wavelet.inverse(
+        f, L, N, P, matrices, lam, lam, tau, method=method, adjoint=True
     )
 
-    f_wav_adjoint, f_scal_adjoint = ball_wavelet_adjoint.inverse(
-        f, L, N, P, lam, lam, tau, method=method
-    )
-
-    a = np.vdot(f, f_inverse)
-    b = np.vdot(f_scal, f_scal_adjoint)
+    a = np.vdot(f, f2)
+    b = np.vdot(w[0], w2[0])
 
     for jp in range(Jp + 1):
         for jl in range(Jl + 1):
-            b += np.vdot(f_wav[jp][jl], f_wav_adjoint[jp][jl])
+            b += np.vdot(w[1][jp][jl], w2[1][jp][jl])
 
     assert np.abs(a) == pytest.approx(np.abs(b))

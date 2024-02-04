@@ -3,6 +3,7 @@
 **************************
 Transforms
 **************************
+Note that all transforms straightforwardly provide support for adjoint transforms through a single function variable.
 
 .. list-table:: Spherical harmonic transforms
    :widths: 25 25
@@ -99,26 +100,6 @@ Transforms
    * - :func:`~s2ball.transform.ball_wavelet.inverse_transform_jax`
      - Compute the inverse ball wavelet transform with JAX.
 
-.. list-table:: Adjoint wavelet transforms
-   :widths: 25 25
-   :header-rows: 1
-
-   * - Function Name
-     - Description
-   * - :func:`~s2ball.transform.ball_wavelet_adjoint.forward`
-     - Wrapper function for forward adjoint ball wavelet transform.
-   * - :func:`~s2ball.transform.ball_wavelet_adjoint.forward_transform`
-     - Compute the forward adjoint ball wavelet transform with Numpy.
-   * - :func:`~s2ball.transform.ball_wavelet_adjoint.forward_transform_jax`
-     - Compute the forward adjoint ball wavelet transform with JAX.
-   * - :func:`~s2ball.transform.ball_wavelet_adjoint.inverse`
-     - Wrapper function for inverse adjoint ball wavelet transform.
-   * - :func:`~s2ball.transform.ball_wavelet_adjoint.inverse_transform`
-     - Compute the inverse adjoint ball wavelet transform with Numpy.
-   * - :func:`~s2ball.transform.ball_wavelet_adjoint.inverse_transform_jax`
-     - Compute the inverse adjoint ball wavelet transform with JAX.
-
-
 .. toctree::
    :hidden:
    :maxdepth: 2
@@ -129,5 +110,4 @@ Transforms
    laguerre
    wigner_laguerre
    wavelet
-   wavelet_adjoint
    

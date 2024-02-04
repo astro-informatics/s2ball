@@ -1,16 +1,15 @@
+from jax.config import config
+
+config.update("jax_enable_x64", True)
+
 import os
 import numpy as np
 import pyssht as ssht
 import pytest
-
 from s2ball.transform import harmonic
 from s2ball.construct.legendre_constructor import *
+from s2ball.construct import matrix
 from s2ball import utils
-
-from jax import jit, device_put
-from jax.config import config
-
-config.update("jax_enable_x64", True)
 
 L_to_test = [16, 32]
 spin_to_test = [-2, 0, 2]
@@ -55,17 +54,17 @@ def test_transform_precompute(flm_generator, L: int, spin: int, method: str):
     """Test wrapper implementation of forward/inverse precompute sht"""
     save_dir = ".matrices"
 
-    leg_for = construct_legendre_matrix(L, save_dir, spin)
-    leg_inv = construct_legendre_matrix_inverse(L, save_dir, spin)
-
+    legendre = matrix.generate_matrices(
+        transform="spherical_harmonic", L=L, spin=spin, save_dir=save_dir
+    )
     flm = flm_generator(L=L, spin=spin)
 
     f = ssht.inverse(utils.flm_2d_to_1d(flm, L), L, spin)
 
-    flm_precomp = harmonic.forward(f, L, leg_for, method, spin)
+    flm_precomp = harmonic.forward(f, L, legendre, method, spin)
     assert np.allclose(flm_precomp, flm)
 
-    f_precomp = harmonic.inverse(flm_precomp, L, leg_inv, method, spin)
+    f_precomp = harmonic.inverse(flm_precomp, L, legendre, method, spin)
     assert np.allclose(f_precomp, f)
 
 
@@ -108,18 +107,17 @@ def test_transform_precompute_numpy(flm_generator, L: int, spin: int):
     """Test cpu implementation of forward/inverse precompute sht"""
     save_dir = ".matrices"
 
-    leg_for = construct_legendre_matrix(L, save_dir, spin)
-    leg_inv = construct_legendre_matrix_inverse(L, save_dir, spin)
-
+    legendre = matrix.generate_matrices(
+        transform="spherical_harmonic", L=L, spin=spin, save_dir=save_dir
+    )
     flm = flm_generator(L=L, spin=spin)
 
     f = ssht.inverse(utils.flm_2d_to_1d(flm, L), L, spin)
 
-    flm_cpu = harmonic.forward_transform(f, leg_for)
-    assert np.allclose(flm_cpu, flm)
-
-    f_cpu = harmonic.inverse_transform(flm_cpu, leg_inv)
-    assert np.allclose(f_cpu, f)
+    flm_test = harmonic.forward_transform(f, legendre)
+    assert np.allclose(flm_test, flm)
+    f_test = harmonic.inverse_transform(flm_test, legendre)
+    assert np.allclose(f_test, f)
 
 
 @pytest.mark.parametrize("L", L_to_test)
@@ -128,22 +126,17 @@ def test_transform_precompute_jax(flm_generator, L: int, spin: int):
     """Test gpu implementation of forward/inverse precompute sht"""
     save_dir = ".matrices"
 
-    leg_for = device_put(construct_legendre_matrix(L, save_dir, spin))
-    leg_inv = device_put(construct_legendre_matrix_inverse(L, save_dir, spin))
-
+    legendre = matrix.generate_matrices(
+        transform="spherical_harmonic", L=L, spin=spin, save_dir=save_dir
+    )
     flm = flm_generator(L=L, spin=spin, reality=False)
 
     f = ssht.inverse(utils.flm_2d_to_1d(flm, L), L, spin)
 
-    forward_jit = jit(harmonic.forward_transform_jax)
-    inverse_jit = jit(harmonic.inverse_transform_jax)
-
-    flm_gpu = forward_jit(device_put(f), leg_for)
-    flm_gpu = np.array(flm_gpu)
-    assert np.allclose(flm_gpu, flm)
-
-    f_gpu = inverse_jit(device_put(flm_gpu), leg_inv)
-    assert np.allclose(f_gpu, f)
+    flm_test = harmonic.forward_transform_jax(f, legendre)
+    assert np.allclose(flm_test, flm)
+    f_test = harmonic.inverse_transform_jax(flm_test, legendre)
+    assert np.allclose(f_test, f)
 
 
 @pytest.mark.parametrize("L", L_to_test)

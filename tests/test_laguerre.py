@@ -1,9 +1,11 @@
+from jax.config import config
+
+config.update("jax_enable_x64", True)
+
 import numpy as np
 import pytest
-
 from s2ball.transform import laguerre
-from s2ball.construct.legendre_constructor import *
-from s2ball.sampling import laguerre_sampling
+from s2ball.construct import matrix
 
 L_to_test = [8, 12, 16]
 P_to_test = [8, 12, 16]
@@ -16,21 +18,17 @@ methods_to_test = ["numpy", "jax"]
 @pytest.mark.parametrize("tau", tau_to_test)
 @pytest.mark.parametrize("method", methods_to_test)
 def test_roundtrip_laguerre(flmp_generator, L: int, P: int, tau: float, method: str):
-    legendre_forward = load_legendre_matrix(L, forward=True)
-    legendre_inverse = load_legendre_matrix(L, forward=False)
 
-    lag_poly_f = laguerre_sampling.polynomials(P, tau, forward=True)
-    lag_poly_i = laguerre_sampling.polynomials(P, tau, forward=False)
-
+    matrices = matrix.generate_matrices(
+        transform="spherical_laguerre", L=L, P=P, tau=tau
+    )
     flmp = flmp_generator(L, P)
 
-    f = laguerre.inverse(flmp, L, P, tau, legendre_inverse, lag_poly_i, method)
-    flmp = laguerre.forward(f, L, P, tau, legendre_forward, lag_poly_f, method)
+    f = laguerre.inverse(flmp, L, P, tau, matrices, method)
+    flmp = laguerre.forward(f, L, P, tau, matrices, method)
 
-    f_check = laguerre.inverse(flmp, L, P, tau, legendre_inverse, lag_poly_i, method)
-    flmp_check = laguerre.forward(
-        f_check, L, P, tau, legendre_forward, lag_poly_f, method
-    )
+    f_check = laguerre.inverse(flmp, L, P, tau, matrices, method)
+    flmp_check = laguerre.forward(f_check, L, P, tau, matrices, method)
 
     np.testing.assert_allclose(f, f_check, atol=1e-14)
     np.testing.assert_allclose(flmp, flmp_check, atol=1e-14)
