@@ -25,10 +25,10 @@ To apply the transforms provided by ``S2BALL`` one need only import the package 
 |   L = L                                               |   L = L; N = N                                             |
 |                                                       |                                                            |
 |   # Compute harmonic coefficients                     |   # Compute Wigner coefficients                            |
-|   flm = harmonic.forward(f, L)                        |   flmn = wigner.forward(f, L, N)                      |
+|   flm = harmonic.forward(f, L)                        |   flmn = wigner.forward(f, L, N)                           |
 |                                                       |                                                            |
 |   # Sythensise signal f                               |   # Sythensise signal f                                    |
-|   f = harmonic.inverse(flm, L)                        |   f = wigner.inverse(flmn, L, N)                      |
+|   f = harmonic.inverse(flm, L)                        |   f = wigner.inverse(flmn, L, N)                           |
 +-------------------------------------------------------+------------------------------------------------------------+
 
 +---------------------------------------------------+---------------------------------------------------------+
@@ -39,10 +39,10 @@ To apply the transforms provided by ``S2BALL`` one need only import the package 
 |   L = L; P = P                                    |   L = L; N = N; P = P                                   |
 |                                                   |                                                         |
 |   # Compute spherical-Laguerre coefficients       |   # Compute Wigner coefficients                         |
-|   flmp = laguerre.forward(f, L, P)                |   flmnp = wigner_laguerre.forward(f, L, N, P)      |
+|   flmp = laguerre.forward(f, L, P)                |   flmnp = wigner_laguerre.forward(f, L, N, P)           |
 |                                                   |                                                         |
 |   # Sythensise signal f                           |   # Sythensise signal f                                 |
-|   f = laguerre.inverse(flmp, L, P)                |   f = wigner_laguerre.inverse(flmnp, L, N, P)      |
+|   f = laguerre.inverse(flmp, L, P)                |   f = wigner_laguerre.inverse(flmnp, L, N, P)           |
 +---------------------------------------------------+---------------------------------------------------------+
 
 However, for repeated application of these transforms it is optimal to instead precompile 
