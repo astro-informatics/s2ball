@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Wavelet Functions &#8212; S2BALL 0.0.1 documentation</title>
+    <title>Top-level wrappers &#8212; S2BALL 0.0.1 documentation</title>
   
   
   
@@ -51,11 +51,11 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/wavelets/index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/constructor/matrix';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Generating Functions" href="kernels.html" />
-    <link rel="prev" title="Laguerre Sampling" href="../sampling/laguerre_sampling.html" />
+    <link rel="next" title="Legendre Matrices" href="legendre_constructor.html" />
+    <link rel="prev" title="Precompute Matrices" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -410,21 +410,21 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../transform/wavelet.html">Ball wavelet</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../constructor/index.html">Precompute Matrices</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../constructor/matrix.html">Top-level wrappers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../constructor/legendre_constructor.html">Legendre Matrices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../constructor/wigner_constructor.html">Wigner Matrices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../constructor/wavelet_constructor.html">Wavelet Matrices</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Precompute Matrices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Top-level wrappers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legendre_constructor.html">Legendre Matrices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wigner_constructor.html">Wigner Matrices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wavelet_constructor.html">Wavelet Matrices</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../sampling/index.html">Gauss-Laguerre Quadrature</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../sampling/laguerre_sampling.html">Laguerre Sampling</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Wavelet Functions</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="kernels.html">Generating Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tiling.html">Wavelet Filters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="helper_functions.html">Bandlimits &amp; Indexing</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../wavelets/index.html">Wavelet Functions</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../wavelets/kernels.html">Generating Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavelets/tiling.html">Wavelet Filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavelets/helper_functions.html">Bandlimits &amp; Indexing</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utility/index.html">Utility Functions</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -471,7 +471,10 @@ document.write(`
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">Wavelet Functions</li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Precompute Matrices</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Top-level wrappers</li>
   </ul>
 </nav>
 </div>
@@ -488,97 +491,49 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="wavelet-functions">
-<h1>Wavelet Functions<a class="headerlink" href="#wavelet-functions" title="Link to this heading">#</a></h1>
-<table class="table" id="id1">
-<caption><span class="caption-text">Generating Functions</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
-<colgroup>
-<col style="width: 50.0%" />
-<col style="width: 50.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Function Name</p></th>
-<th class="head"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="kernels.html#s2ball.wavelets.kernels.tiling_integrand" title="s2ball.wavelets.kernels.tiling_integrand"><code class="xref py py-func docutils literal notranslate"><span class="pre">tiling_integrand()</span></code></a></p></td>
-<td><p>Tiling integrand for scale-discretised wavelets.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="kernels.html#s2ball.wavelets.kernels.part_scaling_fn" title="s2ball.wavelets.kernels.part_scaling_fn"><code class="xref py py-func docutils literal notranslate"><span class="pre">part_scaling_fn()</span></code></a></p></td>
-<td><p>Computes Infinitely differentiable Cauchy-Schwartz function.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kernels.html#s2ball.wavelets.kernels.k_lam" title="s2ball.wavelets.kernels.k_lam"><code class="xref py py-func docutils literal notranslate"><span class="pre">k_lam()</span></code></a></p></td>
-<td><p>Computes wavelet generating function.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="kernels.html#s2ball.wavelets.kernels.tiling_direction" title="s2ball.wavelets.kernels.tiling_direction"><code class="xref py py-func docutils literal notranslate"><span class="pre">tiling_direction()</span></code></a></p></td>
-<td><p>Generates harmonic coefficients for directional tiling functions.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kernels.html#s2ball.wavelets.kernels.binomial_coefficient" title="s2ball.wavelets.kernels.binomial_coefficient"><code class="xref py py-func docutils literal notranslate"><span class="pre">binomial_coefficient()</span></code></a></p></td>
-<td><p>Computes the binomial coefficient <span class="math notranslate nohighlight">\(\binom{n}{k}\)</span>.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="table" id="id2">
-<caption><span class="caption-text">Wavelet Filters</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
-<colgroup>
-<col style="width: 50.0%" />
-<col style="width: 50.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Function Name</p></th>
-<th class="head"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="tiling.html#s2ball.wavelets.tiling.construct_wav_lmp" title="s2ball.wavelets.tiling.construct_wav_lmp"><code class="xref py py-func docutils literal notranslate"><span class="pre">construct_wav_lmp()</span></code></a></p></td>
-<td><p>Generate multiresolution wavelet filters.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="tiling.html#s2ball.wavelets.tiling.construct_f_wav_lmnp" title="s2ball.wavelets.tiling.construct_f_wav_lmnp"><code class="xref py py-func docutils literal notranslate"><span class="pre">construct_f_wav_lmnp()</span></code></a></p></td>
-<td><p>Generate multiresolution wavelet Wigner-Laguerre coefficients for Numpy.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="tiling.html#s2ball.wavelets.tiling.construct_f_wav_lmnp_jax" title="s2ball.wavelets.tiling.construct_f_wav_lmnp_jax"><code class="xref py py-func docutils literal notranslate"><span class="pre">construct_f_wav_lmnp_jax()</span></code></a></p></td>
-<td><p>Generate multiresolution wavelet Wigner-Laguerre coefficients for JAX.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="tiling.html#s2ball.wavelets.tiling.construct_wav_lmp" title="s2ball.wavelets.tiling.construct_wav_lmp"><code class="xref py py-func docutils literal notranslate"><span class="pre">construct_wav_lmp()</span></code></a></p></td>
-<td><p>Compute multiresolution wavelet and scaling filters.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="tiling.html#s2ball.wavelets.tiling.tiling_axisym" title="s2ball.wavelets.tiling.tiling_axisym"><code class="xref py py-func docutils literal notranslate"><span class="pre">tiling_axisym()</span></code></a></p></td>
-<td><p>Generates tuple of axisymmetric tiling functions.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="table" id="id3">
-<caption><span class="caption-text">Helper Functions</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
-<colgroup>
-<col style="width: 50.0%" />
-<col style="width: 50.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Function Name</p></th>
-<th class="head"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="helper_functions.html#s2ball.wavelets.helper_functions.j_max" title="s2ball.wavelets.helper_functions.j_max"><code class="xref py py-func docutils literal notranslate"><span class="pre">j_max()</span></code></a></p></td>
-<td><p>Computes the highest wavelet scale <span class="math notranslate nohighlight">\(J_{\text{max}}\)</span>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="helper_functions.html#s2ball.wavelets.helper_functions.radial_bandlimit" title="s2ball.wavelets.helper_functions.radial_bandlimit"><code class="xref py py-func docutils literal notranslate"><span class="pre">radial_bandlimit()</span></code></a></p></td>
-<td><p>Computes the radial band-limit for scale <span class="math notranslate nohighlight">\(j_p\)</span>.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="helper_functions.html#s2ball.wavelets.helper_functions.angular_bandlimit" title="s2ball.wavelets.helper_functions.angular_bandlimit"><code class="xref py py-func docutils literal notranslate"><span class="pre">angular_bandlimit()</span></code></a></p></td>
-<td><p>Computes the angular band-limit for scale <span class="math notranslate nohighlight">\(j_{\ell}\)</span>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="helper_functions.html#s2ball.wavelets.helper_functions.wavelet_scale_limits" title="s2ball.wavelets.helper_functions.wavelet_scale_limits"><code class="xref py py-func docutils literal notranslate"><span class="pre">wavelet_scale_limits()</span></code></a></p></td>
-<td><p>Computes the angular and radial band-limits for scale <span class="math notranslate nohighlight">\(j_{\ell}/j_p\)</span>.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="helper_functions.html#s2ball.wavelets.helper_functions.wavelet_scale_limits_N" title="s2ball.wavelets.helper_functions.wavelet_scale_limits_N"><code class="xref py py-func docutils literal notranslate"><span class="pre">wavelet_scale_limits_N()</span></code></a></p></td>
-<td><p>Computes the angular and radial band-limits and multiresolution directionality <span class="math notranslate nohighlight">\(N_j\)</span> for scale <span class="math notranslate nohighlight">\(j_{\ell}/j_p\)</span>.</p></td>
-</tr>
-</tbody>
-</table>
-<div class="toctree-wrapper compound">
-</div>
+  <section id="module-s2ball.construct.matrix">
+<span id="top-level-wrappers"></span><h1>Top-level wrappers<a class="headerlink" href="#module-s2ball.construct.matrix" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="s2ball.construct.matrix.generate_matrices">
+<span class="sig-prename descclassname"><span class="pre">s2ball.construct.matrix.</span></span><span class="sig-name descname"><span class="pre">generate_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lam_l</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lam_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.matrices'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#s2ball.construct.matrix.generate_matrices" title="Link to this definition">#</a></dt>
+<dd><p>Top level wrapper function which handles all precompute matrices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transform</strong> (<em>str</em>) – Name of transform to compute/laod matrices for.
+Choice from [“spherical_harmonic, wigner, spherical_laguerre,
+wigner_laguerre, wavelet”].</p></li>
+<li><p><strong>L</strong> (<em>int</em>) – Harmonic band-limit.</p></li>
+<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – Azimuthal band-limit. Defaults to None.</p></li>
+<li><p><strong>P</strong> (<em>int</em><em>, </em><em>optional</em>) – Radial band-limit. Defaults to None.</p></li>
+<li><p><strong>spin</strong> (<em>int</em><em>, </em><em>optional</em>) – Spin number of field. Defaults to 0.</p></li>
+<li><p><strong>tau</strong> (<em>float</em><em>, </em><em>optional</em>) – Laguerre polynomial scale factor. Defaults to 1.0.</p></li>
+<li><p><strong>lam_l</strong> (<em>float</em><em>, </em><em>optional</em>) – Wavelet angular scaling factor. <span class="math notranslate nohighlight">\(\lambda = 2.0\)</span>
+indicates dyadic wavelets. Defaults to 2.0.</p></li>
+<li><p><strong>lam_p</strong> (<em>float</em><em>, </em><em>optional</em>) – Wavelet radial scaling factor. <span class="math notranslate nohighlight">\(\lambda = 2.0\)</span>
+indicates dyadic wavelets. Defaults to 2.0.</p></li>
+<li><p><strong>save_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory in which to save precomputed matrices.
+Defaults to “.matrices”.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>We enforce the following ordering convention: where appropriate order by
+- Legendre
+- Laguerre
+- Wigner
+- Wavelet Filer
+with each entry having forward/inverse as first and second element resp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Collection of np.ndarrays which contain computed matrice elements.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
@@ -592,20 +547,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../sampling/laguerre_sampling.html"
+       href="index.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Laguerre Sampling</p>
+        <p class="prev-next-title">Precompute Matrices</p>
       </div>
     </a>
     <a class="right-next"
-       href="kernels.html"
+       href="legendre_constructor.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Generating Functions</p>
+        <p class="prev-next-title">Legendre Matrices</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

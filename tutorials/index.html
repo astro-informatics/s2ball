@@ -414,7 +414,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="wigner_laguerre/wigner_laguerre_transform.html">Wigner-Laguerre transform</a></li>
 
 
-<li class="toctree-l1"><a class="reference internal" href="wavelet/wavelet_transform.html">Ball wavelet transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavelet/wavelet_transform.html">Wavelet transform</a></li>
 
 
 </ul>
@@ -482,9 +482,6 @@ document.write(`
 
 <span class="c1"># Load some data</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;path_to_your_data.npy&quot;</span><span class="p">)</span>
-
-<span class="c1"># Select your method: JAX is recommended even on CPU for JIT compilation.</span>
-<span class="n">alg</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;numpy&quot;</span><span class="p">,</span> <span class="s2">&quot;jax&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <table class="table">
@@ -493,10 +490,10 @@ document.write(`
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">L</span>
 
 <span class="c1"># Compute harmonic coefficients</span>
-<span class="n">flm</span> <span class="o">=</span> <span class="n">harmonic</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">alg</span><span class="p">)</span>
+<span class="n">flm</span> <span class="o">=</span> <span class="n">harmonic</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
 
 <span class="c1"># Sythensise signal f</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">harmonic</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flm</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">alg</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">harmonic</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flm</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
 </pre></div>
 </div>
 </td>
@@ -504,10 +501,10 @@ document.write(`
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">L</span><span class="p">;</span> <span class="n">N</span> <span class="o">=</span> <span class="n">N</span>
 
 <span class="c1"># Compute Wigner coefficients</span>
-<span class="n">flmn</span> <span class="o">=</span> <span class="n">wigner</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">alg</span><span class="p">)</span>
+<span class="n">flmn</span> <span class="o">=</span> <span class="n">wigner</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
 
 <span class="c1"># Sythensise signal f</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">wigner</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flmn</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">alg</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">wigner</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flmn</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
 </pre></div>
 </div>
 </td>
@@ -520,10 +517,10 @@ document.write(`
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">L</span><span class="p">;</span> <span class="n">P</span> <span class="o">=</span> <span class="n">P</span>
 
 <span class="c1"># Compute spherical-Laguerre coefficients</span>
-<span class="n">flmp</span> <span class="o">=</span> <span class="n">laguerre</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">alg</span><span class="p">)</span>
+<span class="n">flmp</span> <span class="o">=</span> <span class="n">laguerre</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
 
 <span class="c1"># Sythensise signal f</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">laguerre</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flmp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">alg</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">laguerre</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flmp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
 </pre></div>
 </div>
 </td>
@@ -531,10 +528,10 @@ document.write(`
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">L</span><span class="p">;</span> <span class="n">N</span> <span class="o">=</span> <span class="n">N</span><span class="p">;</span> <span class="n">P</span> <span class="o">=</span> <span class="n">P</span>
 
 <span class="c1"># Compute Wigner coefficients</span>
-<span class="n">flmnp</span> <span class="o">=</span> <span class="n">wigner_laguerre</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">alg</span><span class="p">)</span>
+<span class="n">flmnp</span> <span class="o">=</span> <span class="n">wigner_laguerre</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
 
 <span class="c1"># Sythensise signal f</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">wigner_laguerre</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flmnp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">alg</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">wigner_laguerre</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flmnp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
 </pre></div>
 </div>
 </td>

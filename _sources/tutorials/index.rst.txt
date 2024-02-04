@@ -17,9 +17,6 @@ To apply the transforms provided by ``S2BALL`` one need only import the package 
     # Load some data
     f = np.load("path_to_your_data.npy")
 
-    # Select your method: JAX is recommended even on CPU for JIT compilation.
-    alg = ["numpy", "jax"]
-
 +-------------------------------------------------------+------------------------------------------------------------+
 |and for data on the sphere with shape :math:`[L, 2L-1]`|or data on SO(3) with shape :math:`[2N-1, L, 2L-1]`         |
 |                                                       |                                                            |
@@ -28,10 +25,10 @@ To apply the transforms provided by ``S2BALL`` one need only import the package 
 |   L = L                                               |   L = L; N = N                                             |
 |                                                       |                                                            |
 |   # Compute harmonic coefficients                     |   # Compute Wigner coefficients                            |
-|   flm = harmonic.forward(f, L, alg)                   |   flmn = wigner.forward(f, L, N, alg)                      |
+|   flm = harmonic.forward(f, L)                        |   flmn = wigner.forward(f, L, N)                           |
 |                                                       |                                                            |
 |   # Sythensise signal f                               |   # Sythensise signal f                                    |
-|   f = harmonic.inverse(flm, L, alg)                   |   f = wigner.inverse(flmn, L, N, alg)                      |
+|   f = harmonic.inverse(flm, L)                        |   f = wigner.inverse(flmn, L, N)                           |
 +-------------------------------------------------------+------------------------------------------------------------+
 
 +---------------------------------------------------+---------------------------------------------------------+
@@ -42,10 +39,10 @@ To apply the transforms provided by ``S2BALL`` one need only import the package 
 |   L = L; P = P                                    |   L = L; N = N; P = P                                   |
 |                                                   |                                                         |
 |   # Compute spherical-Laguerre coefficients       |   # Compute Wigner coefficients                         |
-|   flmp = laguerre.forward(f, L, P, alg)           |   flmnp = wigner_laguerre.forward(f, L, N, P, alg)      |
+|   flmp = laguerre.forward(f, L, P)                |   flmnp = wigner_laguerre.forward(f, L, N, P)           |
 |                                                   |                                                         |
 |   # Sythensise signal f                           |   # Sythensise signal f                                 |
-|   f = laguerre.inverse(flmp, L, P, alg)           |   f = wigner_laguerre.inverse(flmnp, L, N, P, alg)      |
+|   f = laguerre.inverse(flmp, L, P)                |   f = wigner_laguerre.inverse(flmnp, L, N, P)           |
 +---------------------------------------------------+---------------------------------------------------------+
 
 However, for repeated application of these transforms it is optimal to instead precompile 

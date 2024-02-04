@@ -55,7 +55,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/wigner_laguerre/wigner_laguerre_transform';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Ball wavelet transform" href="../wavelet/wavelet_transform.html" />
+    <link rel="next" title="Wavelet transform" href="../wavelet/wavelet_transform.html" />
     <link rel="prev" title="Spherical-Laguerre transform" href="../laguerre/laguerre_transform.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -419,7 +419,7 @@ document.write(`
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Wigner-Laguerre transform</a></li>
 
 
-<li class="toctree-l1"><a class="reference internal" href="../wavelet/wavelet_transform.html">Ball wavelet transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wavelet/wavelet_transform.html">Wavelet transform</a></li>
 
 
 </ul>
@@ -482,57 +482,76 @@ document.write(`
   <section id="Wigner-Laguerre-transform">
 <h1>Wigner-Laguerre transform<a class="headerlink" href="#Wigner-Laguerre-transform" title="Link to this heading">#</a></h1>
 <p>Lets start by importing some packages</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="kn">from</span> <span class="nn">jax</span> <span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">device_put</span>
-<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets set the precision.</span>
 <span class="kn">from</span> <span class="nn">jax.config</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Import math libraries.</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+
+<span class="c1"># Check which devices we&#39;re running on.</span>
 <span class="kn">from</span> <span class="nn">jax.lib</span> <span class="kn">import</span> <span class="n">xla_bridge</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">xla_bridge</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="o">.</span><span class="n">platform</span><span class="p">)</span>
 
-<span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">s2ball.construct.wigner_constructor</span> <span class="kn">import</span> <span class="n">load_wigner_matrix</span>
-<span class="kn">from</span> <span class="nn">s2ball.transform.wigner_laguerre</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">s2ball.sampling</span> <span class="kn">import</span> <span class="n">laguerre_sampling</span>
-<span class="kn">from</span> <span class="nn">s2ball.utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="c1"># Import the s2ball library.</span>
+<span class="kn">import</span> <span class="nn">s2ball</span>
+<span class="kn">from</span> <span class="nn">s2ball.transform</span> <span class="kn">import</span> <span class="n">wigner_laguerre</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+cpu
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+&lt;ipython-input-1-7841848869cc&gt;:2: DeprecationWarning: Accessing jax.config via the jax.config submodule is deprecated.
+  from jax.config import config
+</pre></div></div>
 </div>
 <section id="Generate-a-random-complex-bandlimited-field">
 <h2>Generate a random complex bandlimited field<a class="headerlink" href="#Generate-a-random-complex-bandlimited-field" title="Link to this heading">#</a></h2>
 <p>Here we generate random Wigner-Laguerre coefficients flmnp which we then convert into a bandlimit signal f on <span class="math notranslate nohighlight">\(\mathbb{H}^4=\mathbb{R}^+\times \text{SO}(3)\)</span>. We also compute some matrices which are cached and pass to their associated functions at run time.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="n">P</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">tau</span> <span class="o">=</span> <span class="mf">1.0</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="mi">32</span>        <span class="c1"># Harmonic bandlimit of the problem.</span>
+<span class="n">P</span> <span class="o">=</span> <span class="mi">32</span>        <span class="c1"># Radial bandlimit of the problem.</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">3</span>         <span class="c1"># Azimuthal (directional) bandlimit of problem.</span>
+
+<span class="c1"># Define a random seed.</span>
 <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">193412341234</span><span class="p">)</span>
 
-<span class="n">wigner_forward</span> <span class="o">=</span> <span class="n">load_wigner_matrix</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">wigner_inverse</span> <span class="o">=</span> <span class="n">load_wigner_matrix</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">lag_poly_f</span> <span class="o">=</span> <span class="n">laguerre_sampling</span><span class="o">.</span><span class="n">polynomials</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">lag_poly_i</span> <span class="o">=</span> <span class="n">laguerre_sampling</span><span class="o">.</span><span class="n">polynomials</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">wigner_forward_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">wigner_forward</span><span class="p">)</span>
-<span class="n">wigner_inverse_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">wigner_inverse</span><span class="p">)</span>
-
-<span class="n">lag_poly_f_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">lag_poly_f</span><span class="p">)</span>
-<span class="n">lag_poly_i_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">lag_poly_i</span><span class="p">)</span>
-
-
-<span class="n">flmnp</span> <span class="o">=</span> <span class="n">generate_flmnp</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">inverse</span><span class="p">(</span><span class="n">flmnp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">wigner_inverse</span><span class="p">,</span> <span class="n">lag_poly_i</span><span class="p">)</span>
-<span class="n">flmnp</span> <span class="o">=</span> <span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">wigner_forward</span><span class="p">,</span> <span class="n">lag_poly_f</span><span class="p">)</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">inverse</span><span class="p">(</span><span class="n">flmnp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">wigner_inverse</span><span class="p">,</span> <span class="n">lag_poly_i</span><span class="p">)</span>
+<span class="c1"># Use s2ball functions to generate a random signal.</span>
+<span class="n">flmnp</span> <span class="o">=</span> <span class="n">s2ball</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">generate_flmnp</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">wigner_laguerre</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flmnp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>    <span class="c1"># Note currently this has to explicitly bandlimit flmnp,</span>
+<span class="n">flmnp</span> <span class="o">=</span> <span class="n">wigner_laguerre</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>    <span class="c1"># as I have yet to enforce bandlimiting symmetries to</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">wigner_laguerre</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flmnp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>    <span class="c1"># generate_flmnp directly.</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Load/construct-relevant-associated-Legendre-matrices">
+<h2>Load/construct relevant associated Legendre matrices<a class="headerlink" href="#Load/construct-relevant-associated-Legendre-matrices" title="Link to this heading">#</a></h2>
+<p>Load precomputed associated Legendre matrices which are used to evaluate the spherical harmonic transform. If these matrices have already been computed, the load function will attempt to locate them inside the .matrices hidden directory. Note that you can specify a directory of your choice, .matrices is simply a default.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">matrices</span> <span class="o">=</span> <span class="n">s2ball</span><span class="o">.</span><span class="n">construct</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">generate_matrices</span><span class="p">(</span><span class="s2">&quot;wigner_laguerre&quot;</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -543,42 +562,63 @@ document.write(`
 <p>Shape: <span class="math notranslate nohighlight">\((P, 2N-1, L, 2L-1) \rightarrow (P, 2N-1, L, 2L-1)\)</span> triangularly oversampled spherical Laguerre coefficients.</p>
 <section id="NumPy-CPU-implementation">
 <h2>NumPy CPU implementation<a class="headerlink" href="#NumPy-CPU-implementation" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flmnp_numpy</span> <span class="o">=</span> <span class="n">forward_transform</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">wigner_forward</span><span class="p">,</span> <span class="n">lag_poly_f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
-<span class="o">%</span><span class="k">timeit</span> forward_transform(f, wigner_forward, lag_poly_f, L, N)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flmnp_numpy</span> <span class="o">=</span> <span class="n">wigner_laguerre</span><span class="o">.</span><span class="n">forward_transform</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">matrices</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> wigner_laguerre.forward_transform(f, matrices, L, N)
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+56.4 ms ± 981 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre></div></div>
 </div>
 </section>
 <section id="JAX-GPU-implementation">
 <h2>JAX GPU implementation<a class="headerlink" href="#JAX-GPU-implementation" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<span class="n">forward_jit</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">forward_transform_jax</span><span class="p">,</span> <span class="n">static_argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="n">flmnp_jax</span> <span class="o">=</span> <span class="n">forward_jit</span><span class="p">(</span><span class="n">f_jax</span><span class="p">,</span> <span class="n">wigner_forward_jax</span><span class="p">,</span> <span class="n">lag_poly_f_jax</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span><span class="o">.</span><span class="n">block_until_ready</span><span class="p">()</span>
-
-<span class="o">%</span><span class="k">timeit</span> forward_jit(f_jax, wigner_forward_jax, lag_poly_f_jax, L, N)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flmnp_jax</span> <span class="o">=</span> <span class="n">wigner_laguerre</span><span class="o">.</span><span class="n">forward_transform_jax</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">matrices</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> wigner_laguerre.forward_transform_jax(f, matrices, L, N)
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+7.69 ms ± 138 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre></div></div>
 </div>
 </section>
 <section id="Evaluate-transform-error">
 <h2>Evaluate transform error<a class="headerlink" href="#Evaluate-transform-error" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flmnp_jax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">flmnp_jax</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy: Forward mean absolute error = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">flmnp_numpy</span> <span class="o">-</span> <span class="n">flmnp</span><span class="p">))))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy: Forward mean absolute error = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">flmnp_numpy</span> <span class="o">-</span> <span class="n">flmnp</span><span class="p">))))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JAX: Forward mean absolute error = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">flmnp_jax</span> <span class="o">-</span> <span class="n">flmnp</span><span class="p">))))</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Numpy: Forward mean absolute error = 2.826225319563e-14
+JAX: Forward mean absolute error = 2.826701487097508e-14
+</pre></div></div>
 </div>
 </section>
 </section>
@@ -587,42 +627,63 @@ document.write(`
 <p>Shape: <span class="math notranslate nohighlight">\((P, 2N-1, L, 2L-1) \rightarrow (P, 2N-1, L, 2L-1)\)</span></p>
 <section id="id1">
 <h2>NumPy CPU implementation<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_numpy</span> <span class="o">=</span> <span class="n">inverse_transform</span><span class="p">(</span><span class="n">flmnp_numpy</span><span class="p">,</span> <span class="n">wigner_inverse</span><span class="p">,</span> <span class="n">lag_poly_i</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
-<span class="o">%</span><span class="k">timeit</span> inverse_transform(flmnp_numpy, wigner_inverse, lag_poly_i, L)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_numpy</span> <span class="o">=</span> <span class="n">wigner_laguerre</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">flmnp_numpy</span><span class="p">,</span> <span class="n">matrices</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> wigner_laguerre.inverse_transform(flmnp_numpy, matrices, L)
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+71.5 ms ± 118 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre></div></div>
 </div>
 </section>
 <section id="id2">
 <h2>JAX GPU implementation<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flmnp_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">flmnp_jax</span><span class="p">)</span>
-<span class="n">inverse_jit</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">inverse_transform_jax</span><span class="p">,</span> <span class="n">static_argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">f_jax</span> <span class="o">=</span> <span class="n">inverse_jit</span><span class="p">(</span><span class="n">flmnp_jax</span><span class="p">,</span> <span class="n">wigner_inverse_jax</span><span class="p">,</span> <span class="n">lag_poly_i_jax</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span><span class="o">.</span><span class="n">block_until_ready</span><span class="p">()</span>
-
-<span class="o">%</span><span class="k">timeit</span> inverse_jit(flmnp_jax, wigner_inverse_jax, lag_poly_i_jax, L)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_jax</span> <span class="o">=</span> <span class="n">wigner_laguerre</span><span class="o">.</span><span class="n">inverse_transform_jax</span><span class="p">(</span><span class="n">flmnp_jax</span><span class="p">,</span> <span class="n">matrices</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> wigner_laguerre.inverse_transform_jax(flmnp_jax, matrices, L)
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+7.8 ms ± 79.4 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre></div></div>
 </div>
 </section>
 <section id="id3">
 <h2>Evaluate transform error<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_jax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f_jax</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy: Forward mean absolute error = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_numpy</span> <span class="o">-</span> <span class="n">f</span><span class="p">))))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy: Forward mean absolute error = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_numpy</span> <span class="o">-</span> <span class="n">f</span><span class="p">))))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JAX: Forward mean absolute error = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_jax</span> <span class="o">-</span> <span class="n">f</span><span class="p">))))</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Numpy: Forward mean absolute error = 1.4534176996105977e-13
+JAX: Forward mean absolute error = 1.4530986305103866e-13
+</pre></div></div>
 </div>
 </section>
 </section>
@@ -651,7 +712,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Ball wavelet transform</p>
+        <p class="prev-next-title">Wavelet transform</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -675,6 +736,7 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Wigner-Laguerre transform</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Generate-a-random-complex-bandlimited-field">Generate a random complex bandlimited field</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Load/construct-relevant-associated-Legendre-matrices">Load/construct relevant associated Legendre matrices</a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Forward-transform">Forward transform</a><ul class="visible nav section-nav flex-column">

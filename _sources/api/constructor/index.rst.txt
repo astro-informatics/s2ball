@@ -1,8 +1,17 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-Matrix Bootstrapping
+Precompute Matrices
 **************************
+
+.. list-table:: Wrapper Functions
+   :widths: 25 25
+   :header-rows: 1
+
+   * - Function Name
+     - Description
+   * - :func:`~s2ball.construct.legendre_constructor.matrix.generate_matrices`
+     - User facing wrapper which handles all precompute matrices. 
 
 .. list-table:: Associated Legendre Matrices
    :widths: 25 25
@@ -40,10 +49,6 @@ Matrix Bootstrapping
 
    * - Function Name
      - Description
-   * - :func:`~s2ball.construct.wavelet_constructor.wavelet_legendre_kernels`
-     - Constructs an array which holds associated Legendre matrices for the forward and inverse spherical harmonic transforms respectively.
-   * - :func:`~s2ball.construct.wavelet_constructor.scaling_laguerre_kernels`
-     - Constructs and array which holds the Laguerre polynomials for forward and inverse Fourier-Laguerre transforms respectively.
    * - :func:`~s2ball.construct.wavelet_constructor.wavelet_wigner_kernels`
      - Constructs a collection of Wigner kernels for multiresolution directional wavelet transforms.
    * - :func:`~s2ball.construct.wavelet_constructor.wavelet_laguerre_kernels`
@@ -53,7 +58,8 @@ Matrix Bootstrapping
    :hidden:
    :maxdepth: 2
    :caption: Matrix Bootstrapping
-
+   
+   matrix
    legendre_constructor
    wigner_constructor
    wavelet_constructor

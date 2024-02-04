@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-Adjoint ball wavelet
+Top-level wrappers
 **************************
-.. automodule:: s2ball.transform.ball_wavelet_adjoint
+.. automodule:: s2ball.construct.matrix
    :members: 

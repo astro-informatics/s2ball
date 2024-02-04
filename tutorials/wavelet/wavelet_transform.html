@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Ball wavelet transform &#8212; S2BALL 0.0.1 documentation</title>
+    <title>Wavelet transform &#8212; S2BALL 0.0.1 documentation</title>
   
   
   
@@ -419,7 +419,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="../wigner_laguerre/wigner_laguerre_transform.html">Wigner-Laguerre transform</a></li>
 
 
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Ball wavelet transform</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Wavelet transform</a></li>
 
 
 </ul>
@@ -462,7 +462,7 @@ document.write(`
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Notebooks</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">Ball...</li>
+    <li class="breadcrumb-item active" aria-current="page">Wavelet transform</li>
   </ul>
 </nav>
 </div>
@@ -479,84 +479,79 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="Ball-wavelet-transform">
-<h1>Ball wavelet transform<a class="headerlink" href="#Ball-wavelet-transform" title="Link to this heading">#</a></h1>
+  <section id="Wavelet-transform">
+<h1>Wavelet transform<a class="headerlink" href="#Wavelet-transform" title="Link to this heading">#</a></h1>
 <p>Lets start by importing some packages</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="kn">from</span> <span class="nn">jax</span> <span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">device_put</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets set the precision.</span>
 <span class="kn">from</span> <span class="nn">jax.config</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Import math libraries.</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+
+<span class="c1"># Check which devices we&#39;re running on.</span>
 <span class="kn">from</span> <span class="nn">jax.lib</span> <span class="kn">import</span> <span class="n">xla_bridge</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">xla_bridge</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="o">.</span><span class="n">platform</span><span class="p">)</span>
 
-<span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">s2ball.transform</span> <span class="kn">import</span> <span class="n">laguerre</span><span class="p">,</span> <span class="n">ball_wavelet</span>
-<span class="kn">from</span> <span class="nn">s2ball.wavelets.helper_functions</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">s2ball.wavelets</span> <span class="kn">import</span> <span class="n">tiling</span>
-<span class="kn">from</span> <span class="nn">s2ball.construct</span> <span class="kn">import</span> <span class="n">wavelet_constructor</span>
-<span class="kn">from</span> <span class="nn">s2ball.utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="c1"># Import the s2ball library.</span>
+<span class="kn">import</span> <span class="nn">s2ball</span>
+<span class="kn">from</span> <span class="nn">s2ball.transform</span> <span class="kn">import</span> <span class="n">ball_wavelet</span><span class="p">,</span> <span class="n">laguerre</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+cpu
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+&lt;ipython-input-1-486a22980479&gt;:2: DeprecationWarning: Accessing jax.config via the jax.config submodule is deprecated.
+  from jax.config import config
+</pre></div></div>
 </div>
 <section id="Generate-a-random-complex-bandlimited-field">
 <h2>Generate a random complex bandlimited field<a class="headerlink" href="#Generate-a-random-complex-bandlimited-field" title="Link to this heading">#</a></h2>
 <p>Here we generate random Spherical-Laguerre coefficients flmp which we then convert into a bandlimit signal f on <span class="math notranslate nohighlight">\(\mathbb{B}^4=\mathbb{R}^+\times\mathbb{S}^2\)</span>. We also compute some matrices which are cached and pass to their associated functions at run time.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="n">P</span> <span class="o">=</span> <span class="n">L</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">tau</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">lam</span> <span class="o">=</span> <span class="mf">2.0</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="mi">32</span>        <span class="c1"># Harmonic bandlimit of the problem.</span>
+<span class="n">P</span> <span class="o">=</span> <span class="mi">32</span>        <span class="c1"># Radial bandlimit of the problem.</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">3</span>         <span class="c1"># Azimuthal (directional) bandlimit of problem.</span>
+
+<span class="c1"># Define a random seed.</span>
 <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">193412341234</span><span class="p">)</span>
 
-<span class="n">Jl</span> <span class="o">=</span> <span class="n">j_max</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
-<span class="n">Jp</span> <span class="o">=</span> <span class="n">j_max</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
-<span class="n">wav_lmp_i</span><span class="p">,</span> <span class="n">scal_lmp</span> <span class="o">=</span> <span class="n">tiling</span><span class="o">.</span><span class="n">compute_wav_lmp</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
-<span class="n">scal_lmp</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-
-<span class="n">wav_lmp_f</span> <span class="o">=</span> <span class="n">tiling</span><span class="o">.</span><span class="n">construct_wav_lmp</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
-<span class="n">factor</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">jp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Jp</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">jl</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Jl</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">L_l</span> <span class="o">=</span> <span class="n">angular_bandlimit</span><span class="p">(</span><span class="n">jl</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
-        <span class="n">wav_lmp_f</span><span class="p">[</span><span class="n">jp</span><span class="p">][</span><span class="n">jl</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
-            <span class="s2">&quot;pln,l-&gt;pln&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">wav_lmp_i</span><span class="p">[</span><span class="n">jp</span><span class="p">][</span><span class="n">jl</span><span class="p">]),</span> <span class="n">factor</span><span class="p">[:</span><span class="n">L_l</span><span class="p">]</span>
-        <span class="p">)</span>
-
-<span class="n">legendre_kernels</span> <span class="o">=</span> <span class="n">wavelet_constructor</span><span class="o">.</span><span class="n">wavelet_legendre_kernels</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-<span class="n">lag_polys</span> <span class="o">=</span> <span class="n">wavelet_constructor</span><span class="o">.</span><span class="n">scaling_laguerre_kernels</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">tau</span><span class="p">)</span>
-
-<span class="n">wav_lag_polys_forward</span> <span class="o">=</span> <span class="n">wavelet_constructor</span><span class="o">.</span><span class="n">wavelet_laguerre_kernels</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">wig_kernels_forward</span> <span class="o">=</span> <span class="n">wavelet_constructor</span><span class="o">.</span><span class="n">wavelet_wigner_kernels</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">wav_lag_polys_inverse</span> <span class="o">=</span> <span class="n">wavelet_constructor</span><span class="o">.</span><span class="n">wavelet_laguerre_kernels</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">wig_kernels_inverse</span> <span class="o">=</span> <span class="n">wavelet_constructor</span><span class="o">.</span><span class="n">wavelet_wigner_kernels</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="n">wigner_kernels_forward_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">wig_kernels_forward</span><span class="p">)</span>
-<span class="n">wigner_kernels_inverse_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">wig_kernels_inverse</span><span class="p">)</span>
-
-<span class="n">wav_lag_polys_forward_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">wav_lag_polys_forward</span><span class="p">)</span>
-<span class="n">wav_lag_polys_inverse_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">wav_lag_polys_inverse</span><span class="p">)</span>
-
-<span class="n">legendre_kernels_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">legendre_kernels</span><span class="p">)</span>
-<span class="n">lag_polys_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">lag_polys</span><span class="p">)</span>
-
-<span class="n">wav_lmp_i_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">wav_lmp_i</span><span class="p">)</span>
-<span class="n">wav_lmp_f_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">wav_lmp_f</span><span class="p">)</span>
-<span class="n">scal_lmp_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">scal_lmp</span><span class="p">)</span>
-
-<span class="n">flmp</span> <span class="o">=</span>  <span class="n">generate_flmp</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">laguerre</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flmp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">tau</span><span class="p">)</span>
-<span class="n">flmp</span> <span class="o">=</span> <span class="n">laguerre</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">tau</span><span class="p">)</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">laguerre</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flmp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">tau</span><span class="p">)</span>
+<span class="c1"># Use s2ball functions to generate a random signal.</span>
+<span class="n">flmp</span> <span class="o">=</span> <span class="n">s2ball</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">generate_flmp</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">laguerre</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">flmp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>      <span class="c1"># Note currently this has to explicitly bandlimit flmnp,</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">ball_wavelet</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>  <span class="c1"># as I have yet to enforce bandlimiting symmetries to</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">ball_wavelet</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>  <span class="c1"># generate_flmp directly.</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Load/construct-relevant-associated-Legendre-matrices">
+<h2>Load/construct relevant associated Legendre matrices<a class="headerlink" href="#Load/construct-relevant-associated-Legendre-matrices" title="Link to this heading">#</a></h2>
+<p>Load precomputed associated Legendre matrices which are used to evaluate the spherical harmonic transform. If these matrices have already been computed, the load function will attempt to locate them inside the .matrices hidden directory. Note that you can specify a directory of your choice, .matrices is simply a default.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">matrices</span> <span class="o">=</span> <span class="n">s2ball</span><span class="o">.</span><span class="n">construct</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">generate_matrices</span><span class="p">(</span><span class="s2">&quot;wavelet&quot;</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -566,29 +561,42 @@ document.write(`
 <h1>Forward transform<a class="headerlink" href="#Forward-transform" title="Link to this heading">#</a></h1>
 <section id="NumPy-CPU-implementation">
 <h2>NumPy CPU implementation<a class="headerlink" href="#NumPy-CPU-implementation" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_wav_numpy</span><span class="p">,</span> <span class="n">f_scal_numpy</span> <span class="o">=</span> <span class="n">ball_wavelet</span><span class="o">.</span><span class="n">forward_transform</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">wav_lmp_f</span><span class="p">,</span> <span class="n">scal_lmp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">legendre_kernels</span><span class="p">,</span> <span class="n">lag_polys</span><span class="p">,</span> <span class="n">wig_kernels_forward</span><span class="p">,</span> <span class="n">wav_lag_polys_forward</span><span class="p">)</span>
-<span class="o">%</span><span class="k">timeit</span> ball_wavelet.forward_transform(f, wav_lmp_f, scal_lmp, L, N, P, lam, lam, legendre_kernels, lag_polys, wig_kernels_forward, wav_lag_polys_forward)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w_numpy</span> <span class="o">=</span> <span class="n">ball_wavelet</span><span class="o">.</span><span class="n">forward_transform</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">matrices</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> ball_wavelet.forward_transform(f, L, N, P, matrices)
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+465 ms ± 2.49 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div></div>
 </div>
 </section>
 <section id="JAX-GPU-implementation">
 <h2>JAX GPU implementation<a class="headerlink" href="#JAX-GPU-implementation" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_jax</span> <span class="o">=</span> <span class="n">device_put</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<span class="n">forward_jit</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">ball_wavelet</span><span class="o">.</span><span class="n">forward_transform_jax</span><span class="p">,</span> <span class="n">static_argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
-<span class="n">f_wav_jax</span><span class="p">,</span> <span class="n">f_scal_jax</span> <span class="o">=</span> <span class="n">forward_jit</span><span class="p">(</span><span class="n">f_jax</span><span class="p">,</span> <span class="n">wav_lmp_f_jax</span><span class="p">,</span> <span class="n">scal_lmp_jax</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">legendre_kernels_jax</span><span class="p">,</span> <span class="n">lag_polys_jax</span><span class="p">,</span> <span class="n">wigner_kernels_forward_jax</span><span class="p">,</span> <span class="n">wav_lag_polys_forward_jax</span><span class="p">)</span>
-
-<span class="o">%</span><span class="k">timeit</span> forward_jit(f_jax, wav_lmp_f_jax, scal_lmp_jax, L, N, P, lam, lam, legendre_kernels_jax, lag_polys_jax, wigner_kernels_forward_jax, wav_lag_polys_forward_jax)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w_jax</span> <span class="o">=</span> <span class="n">ball_wavelet</span><span class="o">.</span><span class="n">forward_transform_jax</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">matrices</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> ball_wavelet.forward_transform_jax(f, L, N, P, matrices)
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+64.5 ms ± 798 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre></div></div>
 </div>
 </section>
 </section>
@@ -596,40 +604,65 @@ document.write(`
 <h1>Inverse transform<a class="headerlink" href="#Inverse-transform" title="Link to this heading">#</a></h1>
 <section id="id1">
 <h2>NumPy CPU implementation<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_numpy</span> <span class="o">=</span> <span class="n">ball_wavelet</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">f_wav_numpy</span><span class="p">,</span> <span class="n">f_scal_numpy</span><span class="p">,</span> <span class="n">wav_lmp_i</span><span class="p">,</span> <span class="n">scal_lmp</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">legendre_kernels</span><span class="p">,</span> <span class="n">lag_polys</span><span class="p">,</span> <span class="n">wig_kernels_inverse</span><span class="p">,</span> <span class="n">wav_lag_polys_inverse</span><span class="p">)</span>
-<span class="o">%</span><span class="k">timeit</span> ball_wavelet.inverse_transform(f_wav_numpy, f_scal_numpy, wav_lmp_i, scal_lmp, L, N, P, lam, lam, legendre_kernels, lag_polys, wig_kernels_inverse, wav_lag_polys_inverse)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_numpy</span> <span class="o">=</span> <span class="n">ball_wavelet</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">w_numpy</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">matrices</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> ball_wavelet.inverse_transform(w_numpy, L, N, P, matrices)
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+354 ms ± 2.19 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div></div>
 </div>
 </section>
 <section id="id2">
 <h2>JAX GPU implementation<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inverse_jit</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">ball_wavelet</span><span class="o">.</span><span class="n">inverse_transform_jax</span><span class="p">,</span> <span class="n">static_argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">f_jax</span> <span class="o">=</span> <span class="n">inverse_jit</span><span class="p">(</span><span class="n">f_wav_jax</span><span class="p">,</span> <span class="n">f_scal_jax</span><span class="p">,</span> <span class="n">wav_lmp_i_jax</span><span class="p">,</span> <span class="n">scal_lmp_jax</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">legendre_kernels_jax</span><span class="p">,</span> <span class="n">lag_polys_jax</span><span class="p">,</span> <span class="n">wigner_kernels_inverse_jax</span><span class="p">,</span> <span class="n">wav_lag_polys_inverse_jax</span><span class="p">)</span>
-
-<span class="o">%</span><span class="k">timeit</span> inverse_jit(f_wav_jax, f_scal_jax, wav_lmp_i_jax, scal_lmp_jax, L, N, P, lam, lam, legendre_kernels_jax, lag_polys_jax, wigner_kernels_inverse_jax, wav_lag_polys_inverse_jax)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_jax</span> <span class="o">=</span> <span class="n">ball_wavelet</span><span class="o">.</span><span class="n">inverse_transform_jax</span><span class="p">(</span><span class="n">w_jax</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">matrices</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> ball_wavelet.inverse_transform_jax(w_jax, L, N, P, matrices)
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+60.9 ms ± 932 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre></div></div>
 </div>
 </section>
 <section id="Evaluate-transform-error">
 <h2>Evaluate transform error<a class="headerlink" href="#Evaluate-transform-error" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_jax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f_jax</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Round-trip mean absolute difference = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_numpy</span> <span class="o">-</span> <span class="n">f_jax</span><span class="p">))))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Round-trip: Mean absolute difference = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_numpy</span> <span class="o">-</span> <span class="n">f_jax</span><span class="p">))))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy: Mean absolute error = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_numpy</span> <span class="o">-</span> <span class="n">f</span><span class="p">))))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JAX: Mean absolute error = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">f_jax</span> <span class="o">-</span> <span class="n">f</span><span class="p">))))</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Round-trip: Mean absolute difference = 3.997665540708201e-15
+Numpy: Mean absolute error = 3.062883484046315e-13
+JAX: Mean absolute error = 3.062058563688262e-13
+</pre></div></div>
 </div>
 </section>
 </section>
@@ -680,8 +713,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Ball wavelet transform</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Wavelet transform</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Generate-a-random-complex-bandlimited-field">Generate a random complex bandlimited field</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Load/construct-relevant-associated-Legendre-matrices">Load/construct relevant associated Legendre matrices</a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Forward-transform">Forward transform</a><ul class="visible nav section-nav flex-column">

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Matrix Bootstrapping &#8212; S2BALL 0.0.1 documentation</title>
+    <title>Precompute Matrices &#8212; S2BALL 0.0.1 documentation</title>
   
   
   
@@ -52,8 +52,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/constructor/index';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Legendre Matrices" href="legendre_constructor.html" />
-    <link rel="prev" title="Adjoint ball wavelet" href="../transform/wavelet_adjoint.html" />
+    <link rel="next" title="Top-level wrappers" href="matrix.html" />
+    <link rel="prev" title="Ball wavelet" href="../transform/wavelet.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -406,10 +406,10 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../transform/laguerre.html">Spherical-Laguerre</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../transform/wigner_laguerre.html">Wigner-Laguerre</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../transform/wavelet.html">Ball wavelet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transform/wavelet_adjoint.html">Adjoint ball wavelet</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Matrix Bootstrapping</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Precompute Matrices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="matrix.html">Top-level wrappers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="legendre_constructor.html">Legendre Matrices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="wigner_constructor.html">Wigner Matrices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="wavelet_constructor.html">Wavelet Matrices</a></li>
@@ -469,7 +469,7 @@ document.write(`
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">Matrix Bootstrapping</li>
+    <li class="breadcrumb-item active" aria-current="page">Precompute Matrices</li>
   </ul>
 </nav>
 </div>
@@ -486,10 +486,27 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="matrix-bootstrapping">
-<h1>Matrix Bootstrapping<a class="headerlink" href="#matrix-bootstrapping" title="Link to this heading">#</a></h1>
+  <section id="precompute-matrices">
+<h1>Precompute Matrices<a class="headerlink" href="#precompute-matrices" title="Link to this heading">#</a></h1>
 <table class="table" id="id1">
-<caption><span class="caption-text">Associated Legendre Matrices</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<caption><span class="caption-text">Wrapper Functions</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">generate_matrices()</span></code></p></td>
+<td><p>User facing wrapper which handles all precompute matrices.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="table" id="id2">
+<caption><span class="caption-text">Associated Legendre Matrices</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 50.0%" />
 <col style="width: 50.0%" />
@@ -514,8 +531,8 @@ document.write(`
 </tr>
 </tbody>
 </table>
-<table class="table" id="id2">
-<caption><span class="caption-text">Wigner Matrices</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<table class="table" id="id3">
+<caption><span class="caption-text">Wigner Matrices</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 50.0%" />
 <col style="width: 50.0%" />
@@ -540,8 +557,8 @@ document.write(`
 </tr>
 </tbody>
 </table>
-<table class="table" id="id3">
-<caption><span class="caption-text">Wavelet Matrices</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
+<table class="table" id="id4">
+<caption><span class="caption-text">Wavelet Matrices</span><a class="headerlink" href="#id4" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 50.0%" />
 <col style="width: 50.0%" />
@@ -552,12 +569,6 @@ document.write(`
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="wavelet_constructor.html#s2ball.construct.wavelet_constructor.wavelet_legendre_kernels" title="s2ball.construct.wavelet_constructor.wavelet_legendre_kernels"><code class="xref py py-func docutils literal notranslate"><span class="pre">wavelet_legendre_kernels()</span></code></a></p></td>
-<td><p>Constructs an array which holds associated Legendre matrices for the forward and inverse spherical harmonic transforms respectively.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="wavelet_constructor.html#s2ball.construct.wavelet_constructor.scaling_laguerre_kernels" title="s2ball.construct.wavelet_constructor.scaling_laguerre_kernels"><code class="xref py py-func docutils literal notranslate"><span class="pre">scaling_laguerre_kernels()</span></code></a></p></td>
-<td><p>Constructs and array which holds the Laguerre polynomials for forward and inverse Fourier-Laguerre transforms respectively.</p></td>
-</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="wavelet_constructor.html#s2ball.construct.wavelet_constructor.wavelet_wigner_kernels" title="s2ball.construct.wavelet_constructor.wavelet_wigner_kernels"><code class="xref py py-func docutils literal notranslate"><span class="pre">wavelet_wigner_kernels()</span></code></a></p></td>
 <td><p>Constructs a collection of Wigner kernels for multiresolution directional wavelet transforms.</p></td>
 </tr>
@@ -581,20 +592,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../transform/wavelet_adjoint.html"
+       href="../transform/wavelet.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Adjoint ball wavelet</p>
+        <p class="prev-next-title">Ball wavelet</p>
       </div>
     </a>
     <a class="right-next"
-       href="legendre_constructor.html"
+       href="matrix.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Legendre Matrices</p>
+        <p class="prev-next-title">Top-level wrappers</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

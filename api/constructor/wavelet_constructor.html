@@ -408,10 +408,10 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../transform/laguerre.html">Spherical-Laguerre</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../transform/wigner_laguerre.html">Wigner-Laguerre</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../transform/wavelet.html">Ball wavelet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transform/wavelet_adjoint.html">Adjoint ball wavelet</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Matrix Bootstrapping</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Precompute Matrices</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="matrix.html">Top-level wrappers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="legendre_constructor.html">Legendre Matrices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="wigner_constructor.html">Wigner Matrices</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Wavelet Matrices</a></li>
@@ -472,7 +472,7 @@ document.write(`
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API</a></li>
     
     
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Matrix Bootstrapping</a></li>
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Precompute Matrices</a></li>
     
     <li class="breadcrumb-item active" aria-current="page">Wavelet Matrices</li>
   </ul>
@@ -494,35 +494,8 @@ document.write(`
   <section id="module-s2ball.construct.wavelet_constructor">
 <span id="wavelet-matrices"></span><h1>Wavelet Matrices<a class="headerlink" href="#module-s2ball.construct.wavelet_constructor" title="Link to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="s2ball.construct.wavelet_constructor.scaling_laguerre_kernels">
-<span class="sig-prename descclassname"><span class="pre">s2ball.construct.wavelet_constructor.</span></span><span class="sig-name descname"><span class="pre">scaling_laguerre_kernels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#s2ball.construct.wavelet_constructor.scaling_laguerre_kernels" title="Link to this definition">#</a></dt>
-<dd><dl class="simple">
-<dt>Constructs and array which holds the Laguerre polynomials for forward and inverse</dt><dd><p>Fourier-Laguerre transforms respectively.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>P</strong> (<em>int</em>) – Radial bandlimit.</p></li>
-<li><p><strong>tau</strong> (<em>float</em>) – Laguerre polynomial scale factor.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>Array of shape [2, R, P] which contains Laguerre polynomials sampled</dt><dd><p>at radial nodes R.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="s2ball.construct.wavelet_constructor.wavelet_laguerre_kernels">
-<span class="sig-prename descclassname"><span class="pre">s2ball.construct.wavelet_constructor.</span></span><span class="sig-name descname"><span class="pre">wavelet_laguerre_kernels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#s2ball.construct.wavelet_constructor.wavelet_laguerre_kernels" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">s2ball.construct.wavelet_constructor.</span></span><span class="sig-name descname"><span class="pre">wavelet_laguerre_kernels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#s2ball.construct.wavelet_constructor.wavelet_laguerre_kernels" title="Link to this definition">#</a></dt>
 <dd><dl class="simple">
 <dt>Constructs a collection of Laguerre polynomial kernel for multiresolution</dt><dd><p>directional wavelet transforms.</p>
 </dd>
@@ -534,52 +507,20 @@ document.write(`
 <li><p><strong>lam</strong> (<em>float</em>) – Wavelet radial scaling factor. <span class="math notranslate nohighlight">\(\lambda = 2.0\)</span>
 indicates dyadic wavelets.</p></li>
 <li><p><strong>tau</strong> (<em>float</em>) – Laguerre polynomial scale factor.</p></li>
-<li><p><strong>forward</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to load the forward or inverse matrices.
-Defaults to True.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of Laguerre polynomial kernels for each radial wavelet scale.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[np.ndarray]</p>
+<dd class="field-odd"><p>List[List[np.ndarray]]</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="s2ball.construct.wavelet_constructor.wavelet_legendre_kernels">
-<span class="sig-prename descclassname"><span class="pre">s2ball.construct.wavelet_constructor.</span></span><span class="sig-name descname"><span class="pre">wavelet_legendre_kernels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.matrices'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#s2ball.construct.wavelet_constructor.wavelet_legendre_kernels" title="Link to this definition">#</a></dt>
-<dd><dl class="simple">
-<dt>Constructs an array which holds associated Legendre matrices for the</dt><dd><p>forward and inverse spherical harmonic transforms respectively.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>L</strong> (<em>int</em>) – Harmonic band-limit.</p></li>
-<li><p><strong>save_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory in which to save precomputed matrices.
-Defaults to “.matrices”.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Array of shape [2, L, 2L-1, L] which contains associated Legendre matrices.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Currently only <a class="reference external" href="https://arxiv.org/pdf/1110.6298.pdf">McEwen-Wauix</a>
-sampling on the sphere is supported, though this approach can be
-extended to alternate sampling schemes, e.g. HEALPix.</p>
-</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="s2ball.construct.wavelet_constructor.wavelet_wigner_kernels">
-<span class="sig-prename descclassname"><span class="pre">s2ball.construct.wavelet_constructor.</span></span><span class="sig-name descname"><span class="pre">wavelet_wigner_kernels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.matrices'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#s2ball.construct.wavelet_constructor.wavelet_wigner_kernels" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">s2ball.construct.wavelet_constructor.</span></span><span class="sig-name descname"><span class="pre">wavelet_wigner_kernels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.matrices'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#s2ball.construct.wavelet_constructor.wavelet_wigner_kernels" title="Link to this definition">#</a></dt>
 <dd><dl class="simple">
 <dt>Constructs a collection of Wigner kernels for multiresolution directional wavelet</dt><dd><p>transforms.</p>
 </dd>
@@ -591,8 +532,6 @@ extended to alternate sampling schemes, e.g. HEALPix.</p>
 <li><p><strong>N</strong> (<em>int</em>) – Directional band-limit. Must be &lt; L.</p></li>
 <li><p><strong>lam</strong> (<em>float</em>) – Wavelet angular scaling factor. <span class="math notranslate nohighlight">\(\lambda = 2.0\)</span>
 indicates dyadic wavelets.</p></li>
-<li><p><strong>forward</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to load the forward or inverse matrices.
-Defaults to True.</p></li>
 <li><p><strong>save_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory in which to save precomputed matrices.
 Defaults to “.matrices”.</p></li>
 </ul>
@@ -601,7 +540,7 @@ Defaults to “.matrices”.</p></li>
 <dd class="field-even"><p>List of Wigner transform kernels for each angular wavelet scale.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[np.ndarray]</p>
+<dd class="field-odd"><p>List[List[np.ndarray]]</p>
 </dd>
 </dl>
 <div class="admonition note">
