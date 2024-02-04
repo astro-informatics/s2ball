@@ -24,7 +24,7 @@ def generate_matrices(
     Args:
         transform (str): Name of transform to compute/laod matrices for.
             Choice from ["spherical_harmonic, wigner, spherical_laguerre,
-            wigner_laguerre"].
+            wigner_laguerre, wavelet"].
         L (int): Harmonic band-limit.
         N (int, optional): Azimuthal band-limit. Defaults to None.
         P (int, optional): Radial band-limit. Defaults to None.

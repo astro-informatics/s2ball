@@ -11,7 +11,7 @@ def forward(
     L: int,
     N: int,
     P: int,
-    tau: float,
+    tau: float = 1.0,
     matrices: np.ndarray = None,
     method: str = "jax",
     save_dir: str = ".matrices",
@@ -26,7 +26,7 @@ def forward(
         L (int): Harmonic band-limit.
         N (int): Directional band-limit. Must be < L.
         P (int): Radial band-limit.
-        tau (float): Laguerre polynomial scale factor.
+        tau (float, optional): Laguerre polynomial scale factor. Defaults to 1.0.
         matrices (np.ndarray, optional): List of matrices corresponding to all
             necessary precomputed values. Defaults to None.
         method (str, optional): Evaluation method in {"numpy", "jax"}.
@@ -138,7 +138,7 @@ def inverse(
     L: int,
     N: int,
     P: int,
-    tau: float,
+    tau: float = 1.0,
     matrices: np.ndarray = None,
     method: str = "jax",
     save_dir: str = ".matrices",
@@ -153,7 +153,7 @@ def inverse(
         L (int): Harmonic band-limit.
         N (int): Directional band-limit. Must be < L.
         P (int): Radial band-limit.
-        tau (float): Laguerre polynomial scale factor.
+        tau (float, optional): Laguerre polynomial scale factor. Defaults to 1.0.
         matrices (np.ndarray, optional): List of matrices corresponding to all
             necessary precomputed values. Defaults to None.
         method (str, optional): Evaluation method in {"numpy", "jax"}.

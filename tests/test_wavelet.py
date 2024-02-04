@@ -34,11 +34,11 @@ def test_roundtrip_wavelet(
         transform="wavelet", L=L, N=N, P=P, tau=tau, lam_l=lam, lam_p=lam
     )
 
-    w = ball_wavelet.forward(f, L, N, P, lam, lam, tau, matrices, method=method)
-    f = ball_wavelet.inverse(w, L, N, P, lam, lam, tau, matrices, method=method)
+    w = ball_wavelet.forward(f, L, N, P, matrices, lam, lam, tau, method=method)
+    f = ball_wavelet.inverse(w, L, N, P, matrices, lam, lam, tau, method=method)
 
-    w2 = ball_wavelet.forward(f, L, N, P, lam, lam, tau, matrices, method=method)
-    f2 = ball_wavelet.inverse(w2, L, N, P, lam, lam, tau, matrices, method=method)
+    w2 = ball_wavelet.forward(f, L, N, P, matrices, lam, lam, tau, method=method)
+    f2 = ball_wavelet.inverse(w2, L, N, P, matrices, lam, lam, tau, method=method)
 
     np.testing.assert_allclose(f, f2, atol=1e-14)
     np.testing.assert_allclose(w[0], w2[0], atol=1e-14)
@@ -66,9 +66,9 @@ def test_forward_adjoint_wavelet(
     matrices = matrix.generate_matrices(
         transform="wavelet", L=L, N=N, P=P, tau=tau, lam_l=lam, lam_p=lam
     )
-    w = ball_wavelet.forward(f, L, N, P, lam, lam, tau, matrices, method=method)
+    w = ball_wavelet.forward(f, L, N, P, matrices, lam, lam, tau, method=method)
     f2 = ball_wavelet.forward(
-        w, L, N, P, lam, lam, tau, matrices, method=method, adjoint=True
+        w, L, N, P, matrices, lam, lam, tau, method=method, adjoint=True
     )
 
     a = np.vdot(f, f2)
@@ -99,10 +99,10 @@ def test_inverse_adjoint_wavelet(
     )
 
     f = laguerre.inverse(flmp, L, P, tau, method=method)
-    w = ball_wavelet.forward(f, L, N, P, lam, lam, tau, matrices, method=method)
-    f2 = ball_wavelet.inverse(w, L, N, P, lam, lam, tau, matrices, method=method)
+    w = ball_wavelet.forward(f, L, N, P, matrices, lam, lam, tau, method=method)
+    f2 = ball_wavelet.inverse(w, L, N, P, matrices, lam, lam, tau, method=method)
     w2 = ball_wavelet.inverse(
-        f, L, N, P, lam, lam, tau, matrices, method=method, adjoint=True
+        f, L, N, P, matrices, lam, lam, tau, method=method, adjoint=True
     )
 
     a = np.vdot(f, f2)

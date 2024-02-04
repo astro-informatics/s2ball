@@ -14,10 +14,10 @@ def forward(
     L: int,
     N: int,
     P: int,
+    matrices: List[np.ndarray] = None,
     lam_l: float = 2.0,
     lam_p: float = 2.0,
     tau: float = 1.0,
-    matrices: List[np.ndarray] = None,
     method: str = "jax",
     save_dir: str = ".matrices",
     adjoint: bool = False,
@@ -75,16 +75,16 @@ def forward(
 
     if method == "numpy":
         return (
-            inverse_transform(f, L, N, P, lam_l, lam_p, matrices, shift)
+            inverse_transform(f, L, N, P, matrices, lam_l, lam_p, shift)
             if adjoint
-            else forward_transform(f, L, N, P, lam_l, lam_p, matrices)
+            else forward_transform(f, L, N, P, matrices, lam_l, lam_p)
         )
 
     elif method == "jax":
         return (
-            inverse_transform_jax(f, L, N, P, lam_l, lam_p, matrices, shift)
+            inverse_transform_jax(f, L, N, P, matrices, lam_l, lam_p, shift)
             if adjoint
-            else forward_transform_jax(f, L, N, P, lam_l, lam_p, matrices)
+            else forward_transform_jax(f, L, N, P, matrices, lam_l, lam_p)
         )
 
     else:
@@ -96,9 +96,9 @@ def forward_transform(
     L: int,
     N: int,
     P: int,
-    lam_l: float,
-    lam_p: float,
     matrices: List[np.ndarray],
+    lam_l: float = 2.0,
+    lam_p: float = 2.0,
     shift: int = 0,
 ) -> Tuple[np.ndarray, List[List[np.ndarray]]]:
     r"""Compute the forward directional wavelet transform on the ball with Numpy.
@@ -111,12 +111,12 @@ def forward_transform(
         L (int): Harmonic band-limit.
         N (int): Directional band-limit. Must be < L.
         P (int): Radial band-limit.
-        lam_l (float): Wavelet angular scaling factor. :math:`\lambda = 2.0`
-            indicates dyadic wavelets.
-        lam_p (float): Wavelet radial scaling factor. :math:`\lambda = 2.0`
-            indicates dyadic wavelets.
         matrices (List[np.ndarray]): List of matrices corresponding to all
             necessary precomputed values.
+        lam_l (float, optional): Wavelet angular scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets. Defaults to 2.0.
+        lam_p (float, optional): Wavelet radial scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets. Defaults to 2.0.
         shift (int, optional): Shift for multiscale reindexing for adjoint transforms.
 
     Returns:
@@ -159,15 +159,15 @@ def forward_transform(
     return [f_scal, f_wav_lmnp]
 
 
-@partial(jit, static_argnums=(1, 2, 3, 4, 5, 7))
+@partial(jit, static_argnums=(1, 2, 3, 5, 6, 7))
 def forward_transform_jax(
     f: jnp.ndarray,
     L: int,
     N: int,
     P: int,
-    lam_l: float,
-    lam_p: float,
     matrices: List[jnp.ndarray],
+    lam_l: float = 2.0,
+    lam_p: float = 2.0,
     shift: int = 0,
 ) -> Tuple[jnp.ndarray, jnp.ndarray, List[List[np.ndarray]]]:
     r"""Compute the forward directional wavelet transform on the ball with JAX and JIT.
@@ -180,12 +180,12 @@ def forward_transform_jax(
         L (int): Harmonic band-limit.
         N (int): Directional band-limit. Must be < L.
         P (int): Radial band-limit.
-        lam_l (float): Wavelet angular scaling factor. :math:`\lambda = 2.0`
-            indicates dyadic wavelets.
-        lam_p (float): Wavelet radial scaling factor. :math:`\lambda = 2.0`
-            indicates dyadic wavelets.
         matrices (List[np.ndarray]): List of matrices corresponding to all
             necessary precomputed values.
+        lam_l (float, optional): Wavelet angular scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets. Defaults to 2.0.
+        lam_p (float, optional): Wavelet radial scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets. Defaults to 2.0.
         shift (int, optional): Shift for multiscale reindexing for adjoint transforms.
 
     Returns:
@@ -244,10 +244,10 @@ def inverse(
     L: int,
     N: int,
     P: int,
-    lam_l: float,
-    lam_p: float,
-    tau: float = 1.0,
     matrices: List[np.ndarray] = None,
+    lam_l: float = 2.0,
+    lam_p: float = 2.0,
+    tau: float = 1.0,
     method: str = "jax",
     save_dir: str = ".matrices",
     adjoint: bool = False,
@@ -263,10 +263,10 @@ def inverse(
         L (int): Harmonic band-limit.
         N (int): Directional band-limit. Must be < L.
         P (int): Radial band-limit.
-        lam_l (float): Wavelet angular scaling factor. :math:`\lambda = 2.0`
-            indicates dyadic wavelets.
-        lam_p (float): Wavelet radial scaling factor. :math:`\lambda = 2.0`
-            indicates dyadic wavelets.
+        lam_l (float, optional): Wavelet angular scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets. Defaults to 2.0.
+        lam_p (float, optional): Wavelet radial scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets. Defaults to 2.0.
         tau (float): Laguerre polynomial scale factor.
         matrices (List[np.ndarray], optional): List of matrices corresponding to all
             necessary precomputed values. Defaults to None.
@@ -305,16 +305,16 @@ def inverse(
 
     if method == "numpy":
         return (
-            forward_transform(w, L, N, P, lam_l, lam_p, matrices, shift)
+            forward_transform(w, L, N, P, matrices, lam_l, lam_p, shift)
             if adjoint
-            else inverse_transform(w, L, N, P, lam_l, lam_p, matrices)
+            else inverse_transform(w, L, N, P, matrices, lam_l, lam_p)
         )
 
     elif method == "jax":
         return (
-            forward_transform_jax(w, L, N, P, lam_l, lam_p, matrices, shift)
+            forward_transform_jax(w, L, N, P, matrices, lam_l, lam_p, shift)
             if adjoint
-            else inverse_transform_jax(w, L, N, P, lam_l, lam_p, matrices)
+            else inverse_transform_jax(w, L, N, P, matrices, lam_l, lam_p)
         )
 
     else:
@@ -326,9 +326,9 @@ def inverse_transform(
     L: int,
     N: int,
     P: int,
-    lam_l: float,
-    lam_p: float,
     matrices: List[np.ndarray],
+    lam_l: float = 2.0,
+    lam_p: float = 2.0,
     shift: int = 0,
 ) -> np.ndarray:
     r"""Compute the inverse directional wavelet transform on the ball with Numpy.
@@ -342,10 +342,10 @@ def inverse_transform(
         L (int): Harmonic band-limit.
         N (int): Directional band-limit. Must be < L.
         P (int): Radial band-limit.
-        lam_l (float): Wavelet angular scaling factor. :math:`\lambda = 2.0`
-            indicates dyadic wavelets.
-        lam_p (float): Wavelet radial scaling factor. :math:`\lambda = 2.0`
-            indicates dyadic wavelets.
+        lam_l (float, optional): Wavelet angular scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets. Defaults to 2.0.
+        lam_p (float, optional): Wavelet radial scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets. Defaults to 2.0.
         matrices (List[np.ndarray]): List of matrices corresponding to all
             necessary precomputed values.
         shift (int, optional): Shift for multiscale reindexing for adjoint transforms.
@@ -389,15 +389,15 @@ def inverse_transform(
     return laguerre.inverse_transform(flmp, matrices[:2], shift)
 
 
-@partial(jit, static_argnums=(1, 2, 3, 4, 5, 7))
+@partial(jit, static_argnums=(1, 2, 3, 5, 6, 7))
 def inverse_transform_jax(
     w: Tuple[np.ndarray, List[List[np.ndarray]]],
     L: int,
     N: int,
     P: int,
-    lam_l: float,
-    lam_p: float,
     matrices: List[jnp.ndarray],
+    lam_l: float = 2.0,
+    lam_p: float = 2.0,
     shift: int = 0,
 ) -> jnp.ndarray:
     r"""Compute the inverse directional wavelet transform on the ball with JAX and JIT.
@@ -411,10 +411,10 @@ def inverse_transform_jax(
         L (int): Harmonic band-limit.
         N (int): Directional band-limit. Must be < L.
         P (int): Radial band-limit.
-        lam_l (float): Wavelet angular scaling factor. :math:`\lambda = 2.0`
-            indicates dyadic wavelets.
-        lam_p (float): Wavelet radial scaling factor. :math:`\lambda = 2.0`
-            indicates dyadic wavelets.
+        lam_l (float, optional): Wavelet angular scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets. Defaults to 2.0.
+        lam_p (float, optional): Wavelet radial scaling factor. :math:`\lambda = 2.0`
+            indicates dyadic wavelets. Defaults to 2.0.
         matrices (List[np.ndarray]): List of matrices corresponding to all
             necessary precomputed values.
         shift (int, optional): Shift for multiscale reindexing for adjoint transforms.

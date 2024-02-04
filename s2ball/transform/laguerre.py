@@ -10,7 +10,7 @@ def forward(
     f: np.ndarray,
     L: int,
     P: int,
-    tau: float,
+    tau: float = 1.0,
     matrices: np.ndarray = None,
     method: str = "jax",
     spin: int = 0,
@@ -25,7 +25,7 @@ def forward(
         f (np.ndarray): Signal on the ball, with shape [P, L, 2L-1].
         L (int): Harmonic band-limit.
         P (int): Radial band-limit.
-        tau (float): Laguerre polynomial scale factor.
+        tau (float, optional): Laguerre polynomial scale factor. Defaults to 1.0.
         matrices (np.ndarray, optional): List of matrices corresponding to all
             necessary precomputed values. Defaults to None.
         method (str, optional): Evaluation method in {"numpy", "jax"}.
@@ -130,7 +130,7 @@ def inverse(
     flmp: np.ndarray,
     L: int,
     P: int,
-    tau: float,
+    tau: float = 1.0,
     matrices: np.ndarray = None,
     method: str = "jax",
     spin: int = 0,
@@ -145,7 +145,7 @@ def inverse(
         flmp (np.ndarray): Spherical-Laguerre coefficients with shape [P, L, 2L-1].
         L (int): Harmonic band-limit.
         P (int): Radial band-limit.
-        tau (float): Laguerre polynomial scale factor.
+        tau (float, optional): Laguerre polynomial scale factor. Defaults to 1.0.
         matrices (np.ndarray, optional): List of matrices corresponding to all
             necessary precomputed values. Defaults to None.
         method (str, optional): Evaluation method in {"numpy", "jax"}.
