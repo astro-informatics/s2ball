@@ -6,8 +6,8 @@
     :target: https://opensource.org/licenses/MIT
 .. image:: https://badge.fury.io/py/s2ball.svg
     :target: https://badge.fury.io/py/s2ball
-.. image:: http://img.shields.io/badge/arXiv-0000.00000-orange.svg?style=flat
-    :target: https://arxiv.org/abs/0000.00000
+.. image:: http://img.shields.io/badge/arXiv-2402.01282-orange.svg?style=flat
+    :target: https://arxiv.org/abs/2402.01282
 .. image:: https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square
     :target: #contributors-
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
@@ -191,9 +191,8 @@ referenced. A BibTeX entry for this reference may look like:
     @article{price:s2ball, 
         author      = "Matthew A. Price and Alicja Polanska and Jessica Whitney and Jason D. McEwen",
         title       = "Differentiable and accelerated directional wavelet transform on the sphere and ball",
-        journal     = "The Open Journal of Astrophysics, submitted",
         year        = "2024",
-        eprint      = "arXiv:0000.0000"        
+        eprint      = "arXiv:2402.01282"        
     }
 
 This work is provided as part of a collection of `JAX` harmonic analysis packages which include 

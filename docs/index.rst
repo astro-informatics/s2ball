@@ -42,9 +42,8 @@ referenced. A BibTeX entry for this reference may look like:
     @article{price:s2ball, 
         author      = "Matthew A. Price and Alicja Polanska and Jessica Whitney and Jason D. McEwen",
         title       = "Differentiable and accelerated directional wavelet transform on the sphere and ball",
-        journal     = "The Open Journal of Astrophysics, submitted",
         year        = "2024",
-        eprint      = "arXiv:0000.0000"        
+        eprint      = "arXiv:2402.01282"        
     }
 
 This work is provided as part of a collection of `JAX` harmonic analysis packages which include 
