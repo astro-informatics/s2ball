@@ -10,7 +10,7 @@ Precompute Matrices
 
    * - Function Name
      - Description
-   * - :func:`~s2ball.construct.legendre_constructor.matrix.generate_matrices`
+   * - :func:`~s2ball.construct.matrix.generate_matrices`
      - User facing wrapper which handles all precompute matrices. 
 
 .. list-table:: Associated Legendre Matrices
